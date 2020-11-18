@@ -2,6 +2,8 @@ const browserSync = require('browser-sync').create();
 const chalk = require('chalk');
 const cleanCSS = require('gulp-clean-css');
 const del = require('del');
+const data = require('gulp-data');
+const fs = require('fs');
 const gulp = require('gulp');
 const htmlmin = require('gulp-htmlmin');
 const notifier = require('node-notifier');
@@ -142,11 +144,40 @@ gulp.task('scss', () => {
  * NUNJUCKS => HTML
 \******************************************************************************/
 gulp.task('compileHTML', () => {
-  let sourceFile = gulp.src('./src/html/pages/*.nunjucks').pipe(
-    nunjucksRender({
-      path: './src/html/templates'
-    }).on('error', error => pingError(error, 'nunjucks'))
-  );
+  const defaultData = require('./src/html/default-data.json');
+
+  let sourceFile = gulp
+    .src('./src/html/pages/*.nunjucks')
+    .pipe(
+      data(file => {
+        // set path to json file, specific to the HTML page we are compiling!
+        const fileName = path.basename(file.path, '.nunjucks');
+        const pathToFile = `./src/html/data/${fileName}.json`;
+
+        // delete cache, we always want the latest json data..
+        delete require.cache[require.resolve(pathToFile)];
+
+        // log that we are grabbing data
+        console.log('grabbing data from: ' + pathToFile);
+
+        // grab specific page data
+        const pageData = require(pathToFile);
+        const combinedData = {
+          ...defaultData,
+          ...pageData
+        };
+
+        // set canonical
+        // pageData.canonical = `${config.urlBase}${fileName}.html`;
+
+        return pageData;
+      }).on('error', pingError)
+    )
+    .pipe(
+      nunjucksRender({
+        path: './src/html/templates'
+      }).on('error', error => pingError(error, 'nunjucks'))
+    );
 
   // minify html, if production build
   if (isProduction) {
@@ -192,7 +223,7 @@ gulp.task('serve', () => {
   });
 
   // watches for any file change and re-compile
-  gulp.watch('./src/html/**/*.nunjucks', gulp.series('compileHTML'));
+  gulp.watch('./src/html/**/*.(json|nunjucks)', gulp.series('compileHTML'));
   gulp.watch('./src/scss/**/*.scss', gulp.series('scss'));
 
   // watch for output change and hot-reload to show latest

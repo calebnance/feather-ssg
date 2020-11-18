@@ -2,8 +2,6 @@
 
 **tl;dr** html/css/js + json + gulp automation to create lightweight static sites
 
----
-
 - [Roadmap](#roadmap)
 - [Install](#install)
 - [Development environment](#development-environment)
@@ -17,13 +15,13 @@
   - [X] QR Code to scan for physical mobile web app development (with fast reload)
 - [X] HTML Layout/Templates for different use cases
 - [X] **Optional:** use jQuery added
-- [ ] Markdown support
-- [ ] Category support
-- [ ] Javascript added (ES6)
-- [ ] Production minify JS, CSS & HTML
-- [ ] Production find/replace <link /> & <script /> tags
 - [ ] HTML populated by .json
-- [ ] Create deploy script to push to stage or production directory
+  - [X] Meta: Title, Keywords & Description
+  - [ ] Category support
+- [X] Production minify JS, CSS & HTML
+  - [X] Shows CSS before and after sizes in build report
+- [ ] Javascript added (ES6)
+- [ ] Production find/replace <link /> & <script /> tags
 
 ## Install
 

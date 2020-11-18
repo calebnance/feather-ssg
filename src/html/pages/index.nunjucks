@@ -8,8 +8,10 @@
 {# setting page specific content #}
 {% block content %}
   <div class="container">
-    <h1>Welcome</h1>
-
+    <h1>
+      {% include "icons/feather.nunjucks" %}
+      welcome to feather ssg
+    </h1>
     <a href="/base-elements.html" role="button">Base Elements</a>
   </div>
 {% endblock %}
