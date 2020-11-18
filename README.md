@@ -4,15 +4,50 @@
 
 ---
 
-- [Technologies Used](#technologies-used)
 - [Roadmap](#roadmap)
 - [Install](#install)
 - [Development environment](#development-environment)
 - [Production & Staging builds](#production--staging-builds)
+- [Technologies Used](#technologies-used)
 - [Helpful code editor packages](#helpful-code-editor-packages)
 
+## Roadmap
+
+- [X] Development environment
+  - [X] QR Code to scan for physical mobile web app development (with fast reload)
+- [X] HTML Layout/Templates for different use cases
+- [X] **Optional:** use jQuery added
+- [ ] Markdown support
+- [ ] Category support
+- [ ] Javascript added (ES6)
+- [ ] Production minify JS, CSS & HTML
+- [ ] Production find/replace <link /> & <script /> tags
+- [ ] HTML populated by .json
+- [ ] Create deploy script to push to stage or production directory
+
+## Install
+
+run: `yarn` or `yarn install`
+
+
+## Development environment
+
+- start local server, run: `yarn dev`
+- stop local server: **ctl** + **c**
+
+## Production & Staging builds
+
+#### create for Stage deploy
+
+- run: `yarn stage`
+- creates: **/static_stage/**
+
+#### create for Production deploy
+
+- run: `yarn prod`
+- creates: **/static_prod/**
+
 ## Technologies Used
----
 
 - Gulp v.4
     - [task()](https://gulpjs.com/docs/en/api/task)
@@ -35,48 +70,7 @@
 - Cleaning up directories before a new compile: [del](https://github.com/gulpjs/gulp/blob/master/docs/recipes/delete-files-folder.md#delete-files-and-folders)
 - CLI helpful coloring using [chalk](https://github.com/chalk/chalk)
 
-## Roadmap
----
-
-- [X] Development environment
-  - [X] QR Code to scan for physical mobile web app development (with fast reload)
-- [X] HTML Layout/Templates for different use cases
-- [X] **Optional:** use jQuery added
-- [ ] Markdown support
-- [ ] Category support
-- [ ] Javascript added (ES6)
-- [ ] Production minify JS, CSS & HTML
-- [ ] Production find/replace <link /> & <script /> tags
-- [ ] HTML populated by .json
-- [ ] Create deploy script to push to stage or production directory
-
-## Install
----
-
-run: `yarn` or `yarn install`
-
-
-## Development environment
----
-
-- start local server, run: `yarn dev`
-- stop local server: **ctl** + **c**
-
-## Production & Staging builds
----
-
-#### create for Stage deploy
-
-- run: `yarn stage`
-- creates: **/static_stage/**
-
-#### create for Production deploy
-
-- run: `yarn prod`
-- creates: **/static_prod/**
-
 ## Helpful code editor packages
----
 
 - For Atom:
     - [Syntax highlighting for nunjucks templates](https://atom.io/packages/language-nunjucks)
