@@ -1,0 +1,19 @@
+{# index page #}
+{% extends "layout.nunjucks" %}
+
+{# setting page specific css #}
+{% block pageSpecificCss %}
+{% endblock %}
+
+{# setting page specific content #}
+{% block content %}
+  <div class="container">
+    <h1>Welcome</h1>
+
+    <a href="/base-elements.html" role="button">Base Elements</a>
+  </div>
+{% endblock %}
+
+{# setting page specific js #}
+{% block pageSpecificJs %}
+{% endblock %}

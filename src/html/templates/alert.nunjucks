@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en"{% if htmlClass|length %} class="{{ htmlClass }}"{% endif %}>
+  {% include "partials/head.nunjucks" %}
+
+  <body{% if bodyClass|length %} class="{{ bodyClass }}"{% endif %}>
+
+    {# module that will have alert module #}
+    {% include "partials/alert-banner.nunjucks" %}
+
+    {# page specific HTML will be added here #}
+    {% block content %}
+    {% endblock %}
+
+    <!-- build:js -->
+    <!-- endbuild -->
+
+    {# hook to allow page specific javascript to be added here #}
+    {% block pageSpecificJs %}
+    {% endblock %}
+
+  </body>
+</html>

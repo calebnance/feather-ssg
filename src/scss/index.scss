@@ -1,0 +1,10 @@
+// imports
+// /////////////////////////////////////////////////////////////////////////////
+@import 'normalize';
+@import 'variables';
+
+body {
+  background-color: $grey;
+  color: $white;
+  border-top: 1px;
+}
