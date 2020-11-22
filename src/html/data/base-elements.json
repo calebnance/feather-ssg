@@ -1,5 +1,6 @@
 {
   "pageTitle": "Base Elements",
   "pageDescr": "html elements + base style display page",
-  "pageKeywords": "html, style, scss, css"
+  "pageKeywords": "html, style, scss, css",
+  "category": "html"
 }

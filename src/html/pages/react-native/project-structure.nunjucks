@@ -1,0 +1,9 @@
+{# projects-structure page #}
+{% extends "layout.nunjucks" %}
+
+{# setting page specific content #}
+{% block content %}
+<div>
+  <h1>Project Structure</h1>
+</div>
+{% endblock %}

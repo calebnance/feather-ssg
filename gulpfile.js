@@ -145,14 +145,23 @@ gulp.task('scss', () => {
 \******************************************************************************/
 gulp.task('compileHTML', () => {
   const defaultData = require('./src/html/default-data.json');
+  const categories = [];
 
   let sourceFile = gulp
-    .src('./src/html/pages/*.nunjucks')
+    .src('./src/html/pages/**/*.nunjucks')
     .pipe(
       data(file => {
+        // get direct path of page
+        const filePath = path.dirname(file.path);
+        const pathArrBase = filePath.split('/src/html/');
+        pathArrBase.shift();
+        const pathArr = pathArrBase[0].split('/');
+        pathArr.shift();
+        const subDirPath = pathArr[0] === undefined ? '' : `${pathArr[0]}/`;
+
         // set path to json file, specific to the HTML page we are compiling!
         const fileName = path.basename(file.path, '.nunjucks');
-        const pathToFile = `./src/html/data/${fileName}.json`;
+        const pathToFile = `./src/html/data/${subDirPath}${fileName}.json`;
 
         // delete cache, we always want the latest json data..
         delete require.cache[require.resolve(pathToFile)];
@@ -162,10 +171,16 @@ gulp.task('compileHTML', () => {
 
         // grab specific page data
         const pageData = require(pathToFile);
+        console.log('pageData', pageData);
         const combinedData = {
           ...defaultData,
           ...pageData
         };
+
+        // add category
+        if (categories.includes(pageData.category) === false) {
+          categories.push(pageData.category);
+        }
 
         // set canonical
         // pageData.canonical = `${config.urlBase}${fileName}.html`;
@@ -188,6 +203,12 @@ gulp.task('compileHTML', () => {
       })
     );
   }
+
+  sourceFile.on('end', () => {
+    console.log(chalk.black.bgBlue('------------'));
+    console.log('categories', categories);
+    console.log(chalk.black.bgBlue('------------'));
+  });
 
   return sourceFile.pipe(gulp.dest(`./${directory}`));
 });
