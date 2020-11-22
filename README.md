@@ -33,12 +33,7 @@ run: `yarn` or `yarn install`
 - start local server, run: `yarn dev`
 - stop local server: **ctl** + **c**
 
-## Production & Staging builds
-
-#### create for Stage deploy
-
-- run: `yarn stage`
-- creates: **/static_stage/**
+## Production builds
 
 #### create for Production deploy
 
