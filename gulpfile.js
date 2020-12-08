@@ -12,6 +12,9 @@ const path = require('path');
 const rename = require('gulp-rename');
 const sass = require('gulp-sass');
 
+// grab the configuration file
+const siteConfig = require('./site-config.json');
+
 // breakout reload for usage after file changes detected
 const reload = browserSync.reload;
 
@@ -183,7 +186,7 @@ gulp.task('compileHTML', () => {
         }
 
         // set canonical
-        // pageData.canonical = `${config.urlBase}${fileName}.html`;
+        pageData.canonical = `${siteConfig.baseUrl}/${subDirPath}${fileName}.html`;
 
         return pageData;
       }).on('error', pingError)

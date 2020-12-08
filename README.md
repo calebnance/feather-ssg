@@ -17,6 +17,7 @@
 - [X] **Optional:** use jQuery added
 - [ ] HTML populated by .json
   - [X] Meta: Title, Keywords & Description
+  - [X] Canonical support
   - [ ] Category support
 - [X] Production minify JS, CSS & HTML
   - [X] Shows CSS before and after sizes in build report

@@ -5,7 +5,7 @@
 
   <title>{{ (pageTitle) | safe }}</title>
   <meta name="Description" content="{{ (pageDescr) | safe}}" />
-
+  <link rel="canonical" href="{{ canonical }}">
 
   <!-- build:css -->
   <link type="text/css" rel="stylesheet" href="css/base.css" />
