@@ -14,14 +14,16 @@
 - [X] Development environment
   - [X] QR Code to scan for physical mobile web app development (with fast reload)
 - [X] HTML Layout/Templates for different use cases
-- [X] **Optional:** use jQuery added
 - [ ] HTML populated by .json
   - [X] Meta: Title, Keywords & Description
   - [X] Canonical support
   - [ ] Category support
+  - [ ] Markdown
+- [ ] Local WYSIWYG Editor
 - [X] Production minify JS, CSS & HTML
   - [X] Shows CSS before and after sizes in build report
-- [ ] Javascript added (ES6)
+- [ ] Javascript support added
+  - [X] **Optional:** use jQuery added
 - [ ] Production find/replace <link /> & <script /> tags
 
 ## Install

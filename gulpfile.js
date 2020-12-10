@@ -166,7 +166,7 @@ gulp.task('compileHTML', () => {
         const fileName = path.basename(file.path, '.nunjucks');
         const pathToFile = `./src/html/data/${subDirPath}${fileName}.json`;
 
-        // delete cache, we always want the latest json data..
+        // delete cache, we always want the latest json data...
         delete require.cache[require.resolve(pathToFile)];
 
         // log that we are grabbing data
@@ -181,8 +181,10 @@ gulp.task('compileHTML', () => {
         };
 
         // add category
-        if (categories.includes(pageData.category) === false) {
-          categories.push(pageData.category);
+        if (pageData.category in categories) {
+          categories[pageData.category].push(`${subDirPath}${fileName}.html`);
+        } else {
+          categories[pageData.category] = [`${subDirPath}${fileName}.html`];
         }
 
         // set canonical
@@ -207,6 +209,7 @@ gulp.task('compileHTML', () => {
     );
   }
 
+  // create supporting files
   sourceFile.on('end', () => {
     console.log(chalk.black.bgBlue('------------'));
     console.log('categories', categories);
