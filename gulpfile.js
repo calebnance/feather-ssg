@@ -7,10 +7,18 @@ const fs = require('fs');
 const gulp = require('gulp');
 const htmlmin = require('gulp-htmlmin');
 const notifier = require('node-notifier');
+const nunjucksMd = require('gulp-nunjucks-md');
 const nunjucksRender = require('gulp-nunjucks-render');
 const path = require('path');
 const rename = require('gulp-rename');
 const sass = require('gulp-sass');
+
+const unified = require('unified');
+const remark = require('remark');
+const markdown = require('remark-parse');
+const frontmatter = require('remark-frontmatter');
+const remarkHtml = require('remark-html');
+const yaml = require('js-yaml');
 
 // grab the configuration file
 const siteConfig = require('./site-config.json');
@@ -268,6 +276,51 @@ gulp.task('serve', () => {
  * start server (DEV ONLY)
 \******************************************************************************/
 gulp.task('build', gulp.series(buildTasks));
+
+gulp.task('markdown', () => {
+  let sourceFile = gulp
+    .src('./src/html/_posts/**/*.md')
+    .pipe(
+      data(async file => {
+        const fileContent = fs.readFileSync(file.path, 'utf8');
+        const fileContentTree = await unified()
+          .use(markdown)
+          .use(frontmatter)
+          .parse(fileContent);
+        
+        // grab yaml
+        const hasYamlMarkdown = fileContentTree.children[0].type === 'yaml';
+        
+        if (hasYamlMarkdown) {
+          const yamlMarkdown = fileContentTree.children[0].value;
+          // yaml to json
+          const yamlJson = yaml.load(yamlMarkdown);
+          fileContentTree.children.shift();
+        }
+        
+        const dataFromMD = await unified()
+          .use(markdown)
+          .use(frontmatter)
+          .use(remarkHtml)
+          .process(fileContent);
+        
+        return dataFromMD;
+      }).on('error', pingError)
+      
+    )
+    .pipe(
+      nunjucksMd({
+        path: ['./src/html/templates/'],
+        data: {
+          canonical: 'https://feather-ssg.dev'
+        }
+      })
+    );
+
+  return sourceFile.pipe(gulp.dest(`./${directory}`));
+});
+
+gulp.task('markdown', gulp.series(['markdown']));
 
 /******************************************************************************\
  * Ping developer that something went wrong
