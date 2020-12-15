@@ -1,7 +1,8 @@
 # feather ssg (static site generator)
 
-**tl;dr** html/css/js + json + gulp automation to create lightweight static sites
+**tl;dr** html/css/js + markdown + gulp automation + hot-reloading to create lightweight static sites
 
+- [Features](#features)
 - [Roadmap](#roadmap)
 - [Install](#install)
 - [Development environment](#development-environment)
@@ -9,22 +10,29 @@
 - [Technologies Used](#technologies-used)
 - [Helpful code editor packages](#helpful-code-editor-packages)
 
+## Features
+
+- TODO
+
 ## Roadmap
 
 - [X] Development environment
   - [X] QR Code to scan for physical mobile web app development (with fast reload)
+  - [ ] Local WYSIWYG Editor
 - [X] HTML Layout/Templates for different use cases
 - [ ] HTML populated by .json
-  - [X] Meta: Title, Keywords & Description
-  - [X] Canonical support
-  - [ ] Category support
-  - [ ] Markdown
-- [ ] Local WYSIWYG Editor
+- [X] Meta: Title, Keywords & Description
+- [X] Canonical support
+- [ ] Category support
+- [X] Markdown support
 - [X] Production minify JS, CSS & HTML
-  - [X] Shows CSS before and after sizes in build report
+  - [X] Show CSS before and after sizes in build report
+  - [ ] Show HTML before and after sizes in build report
+- [ ] Use [purgecss](https://purgecss.com/plugins/gulp.html#installation)?
 - [ ] Javascript support added
   - [X] **Optional:** use jQuery added
 - [ ] Production find/replace <link /> & <script /> tags
+- [ ] sitemap (maybe a cool example of all urls being produced, but also for xml file)
 
 ## Install
 
