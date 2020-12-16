@@ -22,6 +22,8 @@ const yaml = require('js-yaml');
 
 // grab the configuration file
 const siteConfig = require('./site-config.json');
+// import utility functions
+const util = require('./utility-functions');
 
 // breakout reload for usage after file changes detected
 const reload = browserSync.reload;
@@ -43,7 +45,7 @@ const directory = rootDirs[envMode];
  * TASK HANDLING DEPENDING ON ENVIRONMENT
 \******************************************************************************/
 // shared tasks
-const sharedTasks = ['clean', 'scss', 'compileHTML', 'fonts'];
+const sharedTasks = ['clean', 'scss', 'nunjucks', 'markdown', 'fonts'];
 
 // dev ONLY tasks
 const devTasks = ['serve'];
@@ -57,42 +59,14 @@ const buildTasks = isProduction
   : sharedTasks.concat(devTasks);
 
 /******************************************************************************\
- * HELPER FUNCTIONS
-\******************************************************************************/
-function lineStretchToEnd(msg, lineSep) {
-  const spaceNeeded = lineSep.length - msg.length;
-  let spacer = '';
-
-  // if space is needed in message
-  if (spaceNeeded > 0) {
-    const spaceArray = Array.from(Array(spaceNeeded).keys());
-    spacer = spaceArray.map(item => ' ').join('');
-  }
-
-  return `${msg}${spacer}`;
-}
-
-function formatBytes(bytes, decimals = 2) {
-  if (bytes === 0) return '0 Bytes';
-
-  const k = 1024;
-  const dm = decimals < 0 ? 0 : decimals;
-  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
-
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
-
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
-}
-
-/******************************************************************************\
  * NOTIFY COMPLETED BUILD
 \******************************************************************************/
 gulp.task('notify-completed', done => {
   const lineSep =
     ' --------------------------------------------------------------------- ';
   const modeUpper = envMode.toUpperCase();
-  const msg1 = lineStretchToEnd(` Completed build: ${modeUpper}`, lineSep);
-  const msg2 = lineStretchToEnd(` in directory: ./${directory}/`, lineSep);
+  const msg1 = util.lineStretchToEnd(` Completed build: ${modeUpper}`, lineSep);
+  const msg2 = util.lineStretchToEnd(` in directory: ./${directory}/`, lineSep);
   const msg = `${lineSep}\n${msg1}\n${msg2}\n${lineSep}`;
 
   // display build completed message to developer
@@ -127,8 +101,8 @@ gulp.task('scss', () => {
       .pipe(sass().on('error', error => pingError(error, 'scss')))
       .pipe(
         cleanCSS({ compatibility: '*' }, details => {
-          const origSize = formatBytes(details.stats.originalSize);
-          const miniSize = formatBytes(details.stats.minifiedSize);
+          const origSize = util.formatBytes(details.stats.originalSize);
+          const miniSize = util.formatBytes(details.stats.minifiedSize);
 
           console.log(
             `${details.name}: ${chalk.black.red(
@@ -154,12 +128,12 @@ gulp.task('scss', () => {
 /******************************************************************************\
  * NUNJUCKS => HTML
 \******************************************************************************/
-gulp.task('compileHTML', () => {
+gulp.task('nunjucks', () => {
   const defaultData = require('./src/html/default-data.json');
   const categories = [];
 
   let sourceFile = gulp
-    .src('./src/html/pages/**/*.nunjucks')
+    .src('./src/html/pages/**/*.+(nunjucks|njk)')
     .pipe(
       data(file => {
         // get direct path of page
@@ -169,9 +143,11 @@ gulp.task('compileHTML', () => {
         const pathArr = pathArrBase[0].split('/');
         pathArr.shift();
         const subDirPath = pathArr[0] === undefined ? '' : `${pathArr[0]}/`;
+        // TODO: FIX ABOVE
 
         // set path to json file, specific to the HTML page we are compiling!
-        const fileName = path.basename(file.path, '.nunjucks');
+        const fileExtension = path.extname(file.path);
+        const fileName = path.basename(file.path, fileExtension);
         const pathToFile = `./src/html/data/${subDirPath}${fileName}.json`;
 
         // delete cache, we always want the latest json data...
@@ -228,6 +204,51 @@ gulp.task('compileHTML', () => {
 });
 
 /******************************************************************************\
+ * MARKDOWN => HTML
+\******************************************************************************/
+gulp.task('markdown', () => {
+  let sourceFile = gulp
+    .src('./src/html/pages/**/*.+(md|markdown)')
+    .pipe(
+      data(async file => {
+        const fileContent = fs.readFileSync(file.path, 'utf8');
+        const fileContentTree = await unified()
+          .use(markdown)
+          .use(frontmatter)
+          .parse(fileContent);
+
+        // grab yaml
+        const hasYamlMarkdown = fileContentTree.children[0].type === 'yaml';
+
+        if (hasYamlMarkdown) {
+          const yamlMarkdown = fileContentTree.children[0].value;
+          // yaml to json
+          const yamlJson = yaml.load(yamlMarkdown);
+          fileContentTree.children.shift();
+        }
+
+        const dataFromMD = await unified()
+          .use(markdown)
+          .use(frontmatter)
+          .use(remarkHtml)
+          .process(fileContent);
+
+        return dataFromMD;
+      }).on('error', pingError)
+    )
+    .pipe(
+      nunjucksMd({
+        path: ['./src/html/templates/'],
+        data: {
+          canonical: 'https://feather-ssg.dev'
+        }
+      })
+    );
+
+  return sourceFile.pipe(gulp.dest(`./${directory}`));
+});
+
+/******************************************************************************\
  * MOVE FONTS
 \******************************************************************************/
 gulp.task('fonts', () => {
@@ -258,7 +279,8 @@ gulp.task('serve', () => {
   });
 
   // watches for any file change and re-compile
-  gulp.watch('./src/html/**/*.(json|nunjucks)', gulp.series('compileHTML'));
+  gulp.watch('./src/html/**/*.+(json|nunjucks|njk)', gulp.series('nunjucks'));
+  gulp.watch('./src/html/**/*.+(md|markdown)', gulp.series('markdown'));
   gulp.watch('./src/scss/**/*.scss', gulp.series('scss'));
 
   // watch for output change and hot-reload to show latest
@@ -271,59 +293,15 @@ gulp.task('serve', () => {
  * clean directories
  * compile: scss
  * compile: nunjucks
+ * compile: markdown
  * move fonts over
  *
  * start server (DEV ONLY)
 \******************************************************************************/
 gulp.task('build', gulp.series(buildTasks));
 
-gulp.task('markdown', () => {
-  let sourceFile = gulp
-    .src('./src/html/_posts/**/*.md')
-    .pipe(
-      data(async file => {
-        const fileContent = fs.readFileSync(file.path, 'utf8');
-        const fileContentTree = await unified()
-          .use(markdown)
-          .use(frontmatter)
-          .parse(fileContent);
-        
-        // grab yaml
-        const hasYamlMarkdown = fileContentTree.children[0].type === 'yaml';
-        
-        if (hasYamlMarkdown) {
-          const yamlMarkdown = fileContentTree.children[0].value;
-          // yaml to json
-          const yamlJson = yaml.load(yamlMarkdown);
-          fileContentTree.children.shift();
-        }
-        
-        const dataFromMD = await unified()
-          .use(markdown)
-          .use(frontmatter)
-          .use(remarkHtml)
-          .process(fileContent);
-        
-        return dataFromMD;
-      }).on('error', pingError)
-      
-    )
-    .pipe(
-      nunjucksMd({
-        path: ['./src/html/templates/'],
-        data: {
-          canonical: 'https://feather-ssg.dev'
-        }
-      })
-    );
-
-  return sourceFile.pipe(gulp.dest(`./${directory}`));
-});
-
-gulp.task('markdown', gulp.series(['markdown']));
-
 /******************************************************************************\
- * Ping developer that something went wrong
+ * notify developer at the os level, an error has occurred 
 \******************************************************************************/
 pingError = (error, type) => {
   // if you want details of the error in the console

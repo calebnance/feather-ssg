@@ -31,8 +31,10 @@
 - [ ] Use [purgecss](https://purgecss.com/plugins/gulp.html#installation)?
 - [ ] Javascript support added
   - [X] **Optional:** use jQuery added
+- [X] Custom fonts
 - [ ] Production find/replace <link /> & <script /> tags
-- [ ] sitemap (maybe a cool example of all urls being produced, but also for xml file)
+- [ ] Sitemap (maybe a cool example of all urls being produced, but also for xml file
+- [ ] Theming (+ predefined palettes, scss variables and root css usage)
 
 ## Install
 
