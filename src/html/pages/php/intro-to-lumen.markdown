@@ -8,4 +8,4 @@ tags: php code howto
 
 # Intro to Lumen
 
-Welcome to this new page/post.
+Welcome to this new page/post

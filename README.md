@@ -20,7 +20,7 @@
   - [X] QR Code to scan for physical mobile web app development (with fast reload)
   - [ ] Local WYSIWYG Editor
 - [X] HTML Layout/Templates for different use cases
-- [ ] HTML populated by .json
+- [X] HTML populated by .json
 - [X] Meta: Title, Keywords & Description
 - [X] Canonical support
 - [ ] Category support

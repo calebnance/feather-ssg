@@ -6,7 +6,6 @@
   "scripts": {
     "dev": "NODE_ENV=dev gulp build",
     "prod": "NODE_ENV=prod gulp build",
-    "markdown": "NODE_ENV=prod gulp markdown",
     "clean": "gulp clean"
   },
   "repository": {

@@ -12,7 +12,10 @@
       {% include "icons/feather.nunjucks" %}
       welcome to feather ssg
     </h1>
+    
     <a href="/base-elements.html" role="button">Base Elements</a>
+    <a href="/features.html" role="button">Features</a>
+    <a href="/php/intro-to-lumen.html" role="button">Example of Sub-Directory Page</a>
   </div>
 {% endblock %}
 
