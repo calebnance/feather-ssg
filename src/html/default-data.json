@@ -2,8 +2,8 @@
   "htmlLanguage": "en",
   "htmlClass": "",
   "bodyClass": "",
-  "pageTitle": "",
-  "pageDescr": "",
+  "metaTitle": "",
+  "metaDescription": "",
   "pageKeywords": "",
-  "robotType": "index, follow"
+  "metaRobots": "index, follow"
 }
