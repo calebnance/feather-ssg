@@ -3,8 +3,9 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <title>{{ (pageTitle) | safe }}</title>
-  <meta name="Description" content="{{ (pageDescr) | safe}}" />
+  <title>{{ (metaTitle) | safe }}</title>
+  <meta name="Description" content="{{ (metaDescription) | safe }}" />
+  <meta name="robots" content="{{ (metaRobots) | safe }}">
   <link rel="canonical" href="{{ canonical }}">
 
   <!-- build:css -->

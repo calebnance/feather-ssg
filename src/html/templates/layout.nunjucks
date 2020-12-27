@@ -7,6 +7,8 @@
     {# page specific HTML will be added here #}
     {% block content %}
     {% endblock %}
+    
+    {{ content | safe }}
 
     <!-- build:js -->
     <!-- endbuild -->
