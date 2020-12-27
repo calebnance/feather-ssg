@@ -1,6 +1,6 @@
 # feather ssg (static site generator)
 
-**tl;dr** html/css/js + markdown + gulp automation + hot-reloading to create lightweight static sites
+html/css/js + markdown + gulp automation + hot-reloading to create lightweight static sites
 
 - [Features](#features)
 - [Roadmap](#roadmap)
