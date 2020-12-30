@@ -12,26 +12,25 @@ html/css/js + markdown + gulp automation + hot-reloading to create lightweight s
 
 ## Features
 
-- TODO
+- Fast reload on all edits
+- QR code for physical mobile web app development (also with fast reload)
+- HTML + Nunjucks Templating with Layouts
+- SCSS & CSS
+- Markdown support + Front Matter for page data
+- Meta supported: title, keywords, description, canonical, robots, etc.
+- Development stats
+  - page count
+  - CSS before and after minification
 
 ## Roadmap
 
-- [X] Development environment
-  - [X] QR Code to scan for physical mobile web app development (with fast reload)
-  - [ ] Local WYSIWYG Editor
-- [X] HTML Layout/Templates for different use cases
-- [X] HTML populated by .json
-- [X] Meta: Title, Keywords & Description
-- [X] Canonical support
+- [ ] Local WYSIWYG Editor
 - [ ] Category support
-- [X] Markdown support
-- [X] Production minify JS, CSS & HTML
-  - [X] Show CSS before and after sizes in build report
-  - [ ] Show HTML before and after sizes in build report
+- [ ] Show HTML before and after sizes in build report
 - [ ] Use [purgecss](https://purgecss.com/plugins/gulp.html#installation)?
 - [ ] Javascript support added
   - [X] **Optional:** use jQuery added
-- [X] Custom fonts
+- [ ] Font face
 - [ ] Production find/replace <link /> & <script /> tags
 - [ ] Sitemap (maybe a cool example of all urls being produced, but also for xml file
 - [ ] Theming (+ predefined palettes, scss variables and root css usage)

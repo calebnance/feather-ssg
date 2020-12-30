@@ -56,6 +56,7 @@ const directory = rootDirs[envMode];
 \******************************************************************************/
 // html tasks
 const htmlTasks = ['dataStart', 'nunjucks', 'markdown', 'dataEnd'];
+
 // shared tasks
 const sharedTasks = ['clean', 'scss', ...htmlTasks, 'fonts', 'images'];
 
