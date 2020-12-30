@@ -7,11 +7,14 @@ const fs = require('fs');
 const gulp = require('gulp');
 const htmlmin = require('gulp-htmlmin');
 const notifier = require('node-notifier');
+const nunjucks = require('nunjucks');
+const nunjucksGulp = require('gulp-nunjucks');
 const nunjucksMd = require('gulp-nunjucks-md');
 const nunjucksRender = require('gulp-nunjucks-render');
 const path = require('path');
 const rename = require('gulp-rename');
 const sass = require('gulp-sass');
+const wrap = require('gulp-wrap');
 
 const unified = require('unified');
 const remark = require('remark');
@@ -20,6 +23,10 @@ const frontmatter = require('remark-frontmatter');
 const remarkHtml = require('remark-html');
 const yaml = require('js-yaml');
 
+const matter = require('gray-matter');
+const frontMatter = require('gulp-front-matter');
+const marked = require('gulp-marked');
+
 // grab the configuration file
 const siteConfig = require('./site-config.json');
 // import utility functions
@@ -27,6 +34,9 @@ const util = require('./utility-functions');
 
 // breakout reload for usage after file changes detected
 const reload = browserSync.reload;
+
+// const sep = new Array(10).join('+-');
+// console.log('sep', sep);
 
 /******************************************************************************\
  * ENVIRONMENT HANDLING
@@ -44,8 +54,10 @@ const directory = rootDirs[envMode];
 /******************************************************************************\
  * TASK HANDLING DEPENDING ON ENVIRONMENT
 \******************************************************************************/
+// html tasks
+const htmlTasks = ['dataStart', 'nunjucks', 'markdown', 'dataEnd'];
 // shared tasks
-const sharedTasks = ['clean', 'scss', 'nunjucks', 'markdown', 'fonts'];
+const sharedTasks = ['clean', 'scss', ...htmlTasks, 'fonts', 'images'];
 
 // dev ONLY tasks
 const devTasks = ['serve'];
@@ -130,12 +142,13 @@ gulp.task('scss', () => {
 \******************************************************************************/
 gulp.task('nunjucks', () => {
   const defaultData = require('./src/html/default-data.json');
-  const categories = [];
 
   let sourceFile = gulp
-    .src('./src/html/pages/**/*.+(nunjucks|njk)')
+    .src('./src/html/pages/**/*.+(nunjucks|nj|njk)')
     .pipe(
       data(file => {
+        this.pageCount += 1;
+
         // get direct path of page
         const filePath = path.dirname(file.path);
         const pathArrBase = filePath.split('/src/html/');
@@ -158,23 +171,29 @@ gulp.task('nunjucks', () => {
 
         // grab specific page data
         const pageData = require(pathToFile);
-        console.log('pageData', pageData);
         const combinedData = {
           ...defaultData,
           ...pageData
         };
+        // console.log('pageData', pageData);
+        // console.log('combinedData', combinedData);
 
         // add category
-        if (pageData.category in categories) {
-          categories[pageData.category].push(`${subDirPath}${fileName}.html`);
+        if (pageData.category in this.categories) {
+          this.categories[pageData.category].push(
+            `${subDirPath}${fileName}.html`
+          );
         } else {
-          categories[pageData.category] = [`${subDirPath}${fileName}.html`];
+          this.categories[pageData.category] = [
+            `${subDirPath}${fileName}.html`
+          ];
         }
 
         // set canonical
-        pageData.canonical = `${siteConfig.baseUrl}/${subDirPath}${fileName}.html`;
+        combinedData.canonical = `${siteConfig.baseUrl}/${subDirPath}${fileName}.html`;
+        combinedData.content = '<h1>hello world</h1>';
 
-        return pageData;
+        return combinedData;
       }).on('error', pingError)
     )
     .pipe(
@@ -194,11 +213,11 @@ gulp.task('nunjucks', () => {
   }
 
   // create supporting files
-  sourceFile.on('end', () => {
-    console.log(chalk.black.bgBlue('------------'));
-    console.log('categories', categories);
-    console.log(chalk.black.bgBlue('------------'));
-  });
+  // sourceFile.on('end', () => {
+  //   console.log(chalk.black.bgBlue('------------'));
+  //   console.log('categories', categories);
+  //   console.log(chalk.black.bgBlue('------------'));
+  // });
 
   return sourceFile.pipe(gulp.dest(`./${directory}`));
 });
@@ -207,45 +226,78 @@ gulp.task('nunjucks', () => {
  * MARKDOWN => HTML
 \******************************************************************************/
 gulp.task('markdown', () => {
+  const defaultData = require('./src/html/default-data.json');
+
   let sourceFile = gulp
     .src('./src/html/pages/**/*.+(md|markdown)')
     .pipe(
       data(async file => {
+        this.pageCount += 1;
+
+        // get direct path of page
+        const fileInfo = util.parseFilePath(file.path);
+        const filePath = path.dirname(file.path);
+        const pathArrBase = filePath.split('/src/html/');
+        pathArrBase.shift();
+        const pathArr = pathArrBase[0].split('/');
+        pathArr.shift();
+        const subDirPath = pathArr[0] === undefined ? '' : `${pathArr[0]}/`;
+        // set path to json file, specific to the HTML page we are compiling!
+        const fileExtension = path.extname(file.path);
+        const fileName = path.basename(file.path, fileExtension);
+        // TODO: FIX ABOVE
+
         const fileContent = fs.readFileSync(file.path, 'utf8');
-        const fileContentTree = await unified()
-          .use(markdown)
-          .use(frontmatter)
-          .parse(fileContent);
+        const pinkMatter = matter(fileContent);
+        const pageData = pinkMatter.data;
 
-        // grab yaml
-        const hasYamlMarkdown = fileContentTree.children[0].type === 'yaml';
+        const combinedData = {
+          ...defaultData,
+          ...pageData,
+          canonical: `${siteConfig.baseUrl}/${subDirPath}${fileName}.html`
+        };
+        console.log('combinedData');
+        console.log(combinedData);
 
-        if (hasYamlMarkdown) {
-          const yamlMarkdown = fileContentTree.children[0].value;
-          // yaml to json
-          const yamlJson = yaml.load(yamlMarkdown);
-          fileContentTree.children.shift();
-        }
-
-        const dataFromMD = await unified()
-          .use(markdown)
-          .use(frontmatter)
-          .use(remarkHtml)
-          .process(fileContent);
-
-        return dataFromMD;
+        return combinedData;
       }).on('error', pingError)
     )
     .pipe(
       nunjucksMd({
-        path: ['./src/html/templates/'],
-        data: {
-          canonical: 'https://feather-ssg.dev'
-        }
+        path: ['./src/html/templates/']
       })
     );
 
+  // minify html, if production build
+  if (isProduction) {
+    sourceFile = sourceFile.pipe(
+      htmlmin({
+        collapseWhitespace: true,
+        removeComments: true
+      })
+    );
+  }
+
   return sourceFile.pipe(gulp.dest(`./${directory}`));
+});
+
+gulp.task('dataStart', done => {
+  this.categories = [];
+  this.pageCount = 0;
+
+  done();
+});
+
+gulp.task('dataEnd', done => {
+  console.log('---------------------');
+  console.log('categories', this.categories);
+  console.log('_+_+_+_+_+_+_+_+_+_+_');
+  console.log('---------------------');
+
+  console.log('pageCount', chalk.black.bgGreen(` ${this.pageCount} `));
+  console.log('_+_+_+_+_+_+_+_+_+_+_');
+  console.log('---------------------');
+  done();
 });
 
 /******************************************************************************\
@@ -258,9 +310,18 @@ gulp.task('fonts', () => {
 });
 
 /******************************************************************************\
+ * MOVE IMAGES
+\******************************************************************************/
+gulp.task('images', () => {
+  return gulp
+    .src('./src/assets/images/**/*')
+    .pipe(gulp.dest(`./${directory}/images`));
+});
+
+/******************************************************************************\
  * serve up static files (with hot-reload)
  *
- * watches for changes made to html(nunjucks)/scss/js
+ * watches for changes made to html(nunjucks|markdown) + json + scss + js
  * hot-reloads browser(s) connected
 \******************************************************************************/
 gulp.task('serve', () => {
@@ -279,8 +340,10 @@ gulp.task('serve', () => {
   });
 
   // watches for any file change and re-compile
-  gulp.watch('./src/html/**/*.+(json|nunjucks|njk)', gulp.series('nunjucks'));
-  gulp.watch('./src/html/**/*.+(md|markdown)', gulp.series('markdown'));
+  gulp.watch(
+    './src/html/**/*.+(json|nunjucks|nj|njk|md|markdown)',
+    gulp.series(htmlTasks)
+  );
   gulp.watch('./src/scss/**/*.scss', gulp.series('scss'));
 
   // watch for output change and hot-reload to show latest
