@@ -2,11 +2,13 @@
 
 html/css/js + markdown + gulp automation + hot-reloading to create lightweight static sites
 
+[feather-ssg.dev](https://feather-ssg.dev)
+
 - [Features](#features)
 - [Roadmap](#roadmap)
 - [Install](#install)
 - [Development environment](#development-environment)
-- [Production builds](#production--staging-builds)
+- [Production builds](#production-builds)
 - [Deploying to Vercel](#deploying-to-vercel)
 - [Technologies Used](#technologies-used)
 - [Helpful code editor packages](#helpful-code-editor-packages)
