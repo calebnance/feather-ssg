@@ -1,5 +1,10 @@
 'use strict';
 
+const path = require('path');
+
+// grab the configuration file
+const siteConfig = require('./site-config.json');
+
 /******************************************************************************\
  * utility functions
 \******************************************************************************/
@@ -31,4 +36,24 @@ function formatBytes(bytes, decimals = 2) {
   return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
 }
 
-module.exports = { lineStretchToEnd, formatBytes };
+// parse file path and create helpful file info object
+function parseFilePath(filePath) {
+  const fileExt = path.extname(filePath);
+  const fileName = path.basename(filePath, fileExt);
+  const pathNoExt = path.dirname(filePath);
+  const pathArrBase = pathNoExt.split('/src/html/');
+  pathArrBase.shift();
+  const pathArr = pathArrBase[0].split('/');
+  pathArr.shift();
+  const subDirPath = pathArr[0] === undefined ? '' : `${pathArr[0]}/`;
+  const subPath = `/${subDirPath}${fileName}`;
+
+  return {
+    fileExt,
+    fileName,
+    fullPath: `${siteConfig.baseUrl}${subPath}.html`,
+    subPath
+  };
+}
+
+module.exports = { lineStretchToEnd, formatBytes, parseFilePath };
