@@ -168,7 +168,7 @@ gulp.task('nunjucks', () => {
 
         // set canonical
         combinedData.canonical = fileInfo.fullPath;
-        combinedData.content = '<h1>hello world</h1>';
+        // combinedData.content = '<h1>hello world</h1>';
 
         return combinedData;
       }).on('error', pingError)
