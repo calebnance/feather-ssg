@@ -6,29 +6,18 @@ const data = require('gulp-data');
 const fs = require('fs');
 const gulp = require('gulp');
 const htmlmin = require('gulp-htmlmin');
+const matter = require('gray-matter');
 const notifier = require('node-notifier');
-const nunjucks = require('nunjucks');
-const nunjucksGulp = require('gulp-nunjucks');
 const nunjucksMd = require('gulp-nunjucks-md');
 const nunjucksRender = require('gulp-nunjucks-render');
 const path = require('path');
 const rename = require('gulp-rename');
 const sass = require('gulp-sass');
-const wrap = require('gulp-wrap');
-
-const unified = require('unified');
-const remark = require('remark');
-const markdown = require('remark-parse');
-const frontmatter = require('remark-frontmatter');
-const remarkHtml = require('remark-html');
-const yaml = require('js-yaml');
-
 const matter = require('gray-matter');
-const frontMatter = require('gulp-front-matter');
-const marked = require('gulp-marked');
 
 // grab the configuration file
 const siteConfig = require('./site-config.json');
+
 // import utility functions
 const util = require('./utility-functions');
 
@@ -151,18 +140,10 @@ gulp.task('nunjucks', () => {
         this.pageCount += 1;
 
         // get direct path of page
-        const filePath = path.dirname(file.path);
-        const pathArrBase = filePath.split('/src/html/');
-        pathArrBase.shift();
-        const pathArr = pathArrBase[0].split('/');
-        pathArr.shift();
-        const subDirPath = pathArr[0] === undefined ? '' : `${pathArr[0]}/`;
-        // TODO: FIX ABOVE
+        const fileInfo = util.parseFilePath(file.path);
 
         // set path to json file, specific to the HTML page we are compiling!
-        const fileExtension = path.extname(file.path);
-        const fileName = path.basename(file.path, fileExtension);
-        const pathToFile = `./src/html/data/${subDirPath}${fileName}.json`;
+        const pathToFile = `./src/html/data/${fileInfo.subPath}.json`;
 
         // delete cache, we always want the latest json data...
         delete require.cache[require.resolve(pathToFile)];
@@ -181,17 +162,13 @@ gulp.task('nunjucks', () => {
 
         // add category
         if (pageData.category in this.categories) {
-          this.categories[pageData.category].push(
-            `${subDirPath}${fileName}.html`
-          );
+          this.categories[pageData.category].push(`${fileInfo.subPath}.html`);
         } else {
-          this.categories[pageData.category] = [
-            `${subDirPath}${fileName}.html`
-          ];
+          this.categories[pageData.category] = [`${fileInfo.subPath}.html`];
         }
 
         // set canonical
-        combinedData.canonical = `${siteConfig.baseUrl}/${subDirPath}${fileName}.html`;
+        combinedData.canonical = fileInfo.fullPath;
         combinedData.content = '<h1>hello world</h1>';
 
         return combinedData;
@@ -237,16 +214,6 @@ gulp.task('markdown', () => {
 
         // get direct path of page
         const fileInfo = util.parseFilePath(file.path);
-        const filePath = path.dirname(file.path);
-        const pathArrBase = filePath.split('/src/html/');
-        pathArrBase.shift();
-        const pathArr = pathArrBase[0].split('/');
-        pathArr.shift();
-        const subDirPath = pathArr[0] === undefined ? '' : `${pathArr[0]}/`;
-        // set path to json file, specific to the HTML page we are compiling!
-        const fileExtension = path.extname(file.path);
-        const fileName = path.basename(file.path, fileExtension);
-        // TODO: FIX ABOVE
 
         const fileContent = fs.readFileSync(file.path, 'utf8');
         const pinkMatter = matter(fileContent);
@@ -255,10 +222,10 @@ gulp.task('markdown', () => {
         const combinedData = {
           ...defaultData,
           ...pageData,
-          canonical: `${siteConfig.baseUrl}/${subDirPath}${fileName}.html`
+          canonical: fileInfo.fullPath
         };
-        console.log('combinedData');
-        console.log(combinedData);
+        // console.log('combinedData');
+        // console.log(combinedData);
 
         return combinedData;
       }).on('error', pingError)
