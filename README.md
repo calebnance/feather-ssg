@@ -4,6 +4,8 @@ html/css/js + markdown + gulp automation + hot-reloading to create lightweight s
 
 [feather-ssg.dev](https://feather-ssg.dev)
 
+---
+
 - [Features](#features)
 - [Roadmap](#roadmap)
 - [Install](#install)
@@ -61,6 +63,7 @@ run: `yarn` or `yarn install`
 - then run: `yarn prod` to make sure you have all static files generated and ready for deployment
 - then run: `vercel` *(this will prompt a login if you are not already)*
 - going through the setup flow, make sure to set the directory your code is located to be: **./static_prod**
+- ***side note***, i've added a custom domain, (feather-ssg.dev) so to push to that domain i run: `vercel --prod`
 
 ## Technologies Used
 

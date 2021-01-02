@@ -45,8 +45,11 @@ const directory = rootDirs[envMode];
 // html tasks
 const htmlTasks = ['dataStart', 'nunjucks', 'markdown', 'dataEnd'];
 
+// asset tasks
+const assetTasks = ['fonts', 'images', 'videos'];
+
 // shared tasks
-const sharedTasks = ['clean', 'scss', ...htmlTasks, 'fonts', 'images'];
+const sharedTasks = ['clean', 'scss', ...htmlTasks, ...assetTasks];
 
 // dev ONLY tasks
 const devTasks = ['serve'];
@@ -283,6 +286,15 @@ gulp.task('images', () => {
   return gulp
     .src('./src/assets/images/**/*')
     .pipe(gulp.dest(`./${directory}/images`));
+});
+
+/******************************************************************************\
+ * MOVE VIDEOS
+\******************************************************************************/
+gulp.task('videos', () => {
+  return gulp
+    .src('./src/assets/videos/**/*')
+    .pipe(gulp.dest(`./${directory}/videos`));
 });
 
 /******************************************************************************\
