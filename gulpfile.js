@@ -13,7 +13,6 @@ const nunjucksRender = require('gulp-nunjucks-render');
 const path = require('path');
 const rename = require('gulp-rename');
 const sass = require('gulp-sass');
-const matter = require('gray-matter');
 
 // grab the configuration file
 const siteConfig = require('./site-config.json');
