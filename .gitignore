@@ -2,3 +2,5 @@ node_modules/**/*
 
 static_dev/
 static_prod/
+
+.vercel

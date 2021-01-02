@@ -6,7 +6,8 @@ html/css/js + markdown + gulp automation + hot-reloading to create lightweight s
 - [Roadmap](#roadmap)
 - [Install](#install)
 - [Development environment](#development-environment)
-- [Production & Staging builds](#production--staging-builds)
+- [Production builds](#production--staging-builds)
+- [Deploying to Vercel](#deploying-to-vercel)
 - [Technologies Used](#technologies-used)
 - [Helpful code editor packages](#helpful-code-editor-packages)
 
@@ -18,8 +19,8 @@ html/css/js + markdown + gulp automation + hot-reloading to create lightweight s
 - SCSS & CSS
 - Markdown support + Front Matter for page data
 - Meta supported: title, keywords, description, canonical, robots, etc.
-- Development stats
-  - page count
+- Build stats
+  - Page count
   - CSS before and after minification
 
 ## Roadmap
@@ -51,6 +52,13 @@ run: `yarn` or `yarn install`
 
 - run: `yarn prod`
 - creates: **/static_prod/**
+
+## Deploying to Vercel
+
+- Make sure you have [Vercel CLI](https://vercel.com/download) installed globally on your machine
+- then run: `yarn prod` to make sure you have all static files generated and ready for deployment
+- then run: `vercel` *(this will prompt a login if you are not already)*
+- going through the setup flow, make sure to set the directory your code is located to be: **./static_prod**
 
 ## Technologies Used
 
