@@ -9,7 +9,7 @@
   <link rel="canonical" href="{{ canonical }}">
 
   <!-- build:css -->
-  <link type="text/css" rel="stylesheet" href="/css/base.css" />
+    <!-- EVERYTHING WITHIN HERE WILL BE REPALCED WITH STYLE LINK -->
   <!-- endbuild -->
 
   {# hook to allow page specific css to be added here #}

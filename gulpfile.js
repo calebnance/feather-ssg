@@ -12,6 +12,8 @@ const nunjucksMd = require('gulp-nunjucks-md');
 const nunjucksRender = require('gulp-nunjucks-render');
 const path = require('path');
 const rename = require('gulp-rename');
+const replace = require('gulp-replace-task');
+const replaceHTML = require('gulp-html-replace');
 const sass = require('gulp-sass');
 
 // grab the configuration file
@@ -182,15 +184,41 @@ gulp.task('nunjucks', () => {
       }).on('error', error => pingError(error, 'nunjucks'))
     );
 
-  // minify html, if production build
+  // is production build?
+  // - minify html
+  // - string & replace asset paths
   if (isProduction) {
-    sourceFile = sourceFile.pipe(
-      htmlmin({
-        collapseWhitespace: true,
-        removeComments: true
-      })
-    );
+    sourceFile = sourceFile
+      .pipe(
+        htmlmin({
+          collapseWhitespace: true,
+          removeComments: true
+        })
+      )
+      .pipe(
+        replace({
+          patterns: [
+            {
+              match: /src="\/images\//g,
+              replacement: `src="${siteConfig.baseUrl}/images/`
+            },
+            {
+              match: /src="\/videos\//g,
+              replacement: `src="${siteConfig.baseUrl}/videos/`
+            }
+          ]
+        })
+      );
   }
+
+  // replace CSS/JS
+  const cssFile = isProduction ? 'base.min.css' : 'base.css';
+  const cssPath = `/css/${cssFile}`;
+  sourceFile = sourceFile.pipe(
+    replaceHTML({
+      css: `<link type="text/css" rel="stylesheet" href="${cssPath}">`
+    })
+  );
 
   // create supporting files
   // sourceFile.on('end', () => {
@@ -221,6 +249,13 @@ gulp.task('markdown', () => {
         const pinkMatter = matter(fileContent);
         const pageData = pinkMatter.data;
 
+        // add category
+        if (pageData.category in this.categories) {
+          this.categories[pageData.category].push(`${fileInfo.subPath}.html`);
+        } else {
+          this.categories[pageData.category] = [`${fileInfo.subPath}.html`];
+        }
+
         const combinedData = {
           ...defaultData,
           ...pageData,
@@ -247,6 +282,15 @@ gulp.task('markdown', () => {
       })
     );
   }
+
+  // replace CSS/JS
+  const cssFile = isProduction ? 'base.min.css' : 'base.css';
+  const cssPath = `/css/${cssFile}`;
+  sourceFile = sourceFile.pipe(
+    replaceHTML({
+      css: `<link type="text/css" rel="stylesheet" href="${cssPath}">`
+    })
+  );
 
   return sourceFile.pipe(gulp.dest(`./${directory}`));
 });
