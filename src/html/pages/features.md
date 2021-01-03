@@ -6,15 +6,14 @@ category: javascript
 tags: javascript code howto
 ---
 
-# Quick Features
+# Features of Feather SSG
 
-markdown test paragraph..
+This is a return to a simple HTML/CSS/JavaScript dev environment built with **Production** in mind.
 
-- red
-- hot
-- chili
-- peppers
-
-**bold start** to a paragraph
-
-_italic_ paragraph
+- Hot reloading (with QR code for **parallel** physical mobile development)
+- HTML + **Nunjucks Templating** with Layouts
+- **Markdown** support
+- SCSS => CSS
+- HTML, CSS and JS minified for fast page loads
+- **Dark Mode** check with JavaScript (adds `.dark-mode` to body)
+- Data hydration from supporting **json** or **Front Matter**
