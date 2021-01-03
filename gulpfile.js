@@ -184,6 +184,17 @@ gulp.task('nunjucks', () => {
       }).on('error', error => pingError(error, 'nunjucks'))
     );
 
+  // replace CSS/JS
+  const cssFile = isProduction ? 'base.min.css' : 'base.css';
+  const cssPath = `/css/${cssFile}`;
+  console.log('cssPath', cssPath);
+  console.log('====================');
+  sourceFile = sourceFile.pipe(
+    replaceHTML({
+      css: `<link type="text/css" rel="stylesheet" href="${cssPath}">`
+    })
+  );
+
   // is production build?
   // - minify html
   // - string & replace asset paths
@@ -210,15 +221,6 @@ gulp.task('nunjucks', () => {
         })
       );
   }
-
-  // replace CSS/JS
-  const cssFile = isProduction ? 'base.min.css' : 'base.css';
-  const cssPath = `/css/${cssFile}`;
-  sourceFile = sourceFile.pipe(
-    replaceHTML({
-      css: `<link type="text/css" rel="stylesheet" href="${cssPath}">`
-    })
-  );
 
   // create supporting files
   // sourceFile.on('end', () => {
@@ -273,6 +275,15 @@ gulp.task('markdown', () => {
       })
     );
 
+  // replace CSS/JS
+  const cssFile = isProduction ? 'base.min.css' : 'base.css';
+  const cssPath = `/css/${cssFile}`;
+  sourceFile = sourceFile.pipe(
+    replaceHTML({
+      css: `<link type="text/css" rel="stylesheet" href="${cssPath}">`
+    })
+  );
+
   // minify html, if production build
   if (isProduction) {
     sourceFile = sourceFile.pipe(
@@ -282,15 +293,6 @@ gulp.task('markdown', () => {
       })
     );
   }
-
-  // replace CSS/JS
-  const cssFile = isProduction ? 'base.min.css' : 'base.css';
-  const cssPath = `/css/${cssFile}`;
-  sourceFile = sourceFile.pipe(
-    replaceHTML({
-      css: `<link type="text/css" rel="stylesheet" href="${cssPath}">`
-    })
-  );
 
   return sourceFile.pipe(gulp.dest(`./${directory}`));
 });
