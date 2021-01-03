@@ -20,9 +20,12 @@ html/css/js + markdown + gulp automation + hot-reloading to create lightweight s
 - Fast reload on all edits
 - QR code for physical mobile web app development (also with fast reload)
 - HTML + Nunjucks Templating with Layouts
-- SCSS & CSS
+- SCSS => CSS
+- CSS & JS Minified
+- Dark Mode check with JavaScript (adds `.dark-mode` to body)
 - Markdown support + Front Matter for page data
 - Meta supported: title, keywords, description, canonical, robots, etc.
+- Relative / Absolute pathing handled for you
 - Build stats
   - Page count
   - CSS before and after minification
@@ -33,10 +36,7 @@ html/css/js + markdown + gulp automation + hot-reloading to create lightweight s
 - [ ] Category support
 - [ ] Show HTML before and after sizes in build report
 - [ ] Use [purgecss](https://purgecss.com/plugins/gulp.html#installation)?
-- [ ] Javascript support added
-  - [X] **Optional:** use jQuery added
 - [ ] Font face
-- [ ] Production find/replace <link /> & <script /> tags
 - [ ] Sitemap (maybe a cool example of all urls being produced, but also for xml file
 - [ ] Theming (+ predefined palettes, scss variables and root css usage)
 

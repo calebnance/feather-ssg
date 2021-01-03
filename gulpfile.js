@@ -15,6 +15,7 @@ const rename = require('gulp-rename');
 const replace = require('gulp-replace-task');
 const replaceHTML = require('gulp-html-replace');
 const sass = require('gulp-sass');
+const uglify = require('gulp-uglify');
 
 // grab the configuration file
 const siteConfig = require('./site-config.json');
@@ -51,7 +52,7 @@ const htmlTasks = ['dataStart', 'nunjucks', 'markdown', 'dataEnd'];
 const assetTasks = ['fonts', 'images', 'videos'];
 
 // shared tasks
-const sharedTasks = ['clean', 'scss', ...htmlTasks, ...assetTasks];
+const sharedTasks = ['clean', 'scss', 'js', ...htmlTasks, ...assetTasks];
 
 // dev ONLY tasks
 const devTasks = ['serve'];
@@ -132,6 +133,25 @@ gulp.task('scss', () => {
 });
 
 /******************************************************************************\
+ * javascript
+\******************************************************************************/
+gulp.task('js', () => {
+  // grab all js
+  let sourceFile = gulp.src('./src/js/**/*.js');
+
+  if (isProduction) {
+    // minify js & rename
+    sourceFile = sourceFile.pipe(uglify()).pipe(
+      rename(path => {
+        path.basename += '.min';
+      })
+    );
+  }
+
+  return sourceFile.pipe(gulp.dest(`./${directory}/js`));
+});
+
+/******************************************************************************\
  * NUNJUCKS => HTML
 \******************************************************************************/
 gulp.task('nunjucks', () => {
@@ -185,13 +205,11 @@ gulp.task('nunjucks', () => {
     );
 
   // replace CSS/JS
-  const cssFile = isProduction ? 'base.min.css' : 'base.css';
-  const cssPath = `/css/${cssFile}`;
-  console.log('cssPath', cssPath);
-  console.log('====================');
+  const baseFile = isProduction ? 'base.min' : 'base';
   sourceFile = sourceFile.pipe(
     replaceHTML({
-      css: `<link type="text/css" rel="stylesheet" href="${cssPath}">`
+      css: `<link type="text/css" rel="stylesheet" href="/css/${baseFile}.css">`,
+      js: `<script src="/js/${baseFile}.js"></script>`
     })
   );
 
@@ -276,11 +294,11 @@ gulp.task('markdown', () => {
     );
 
   // replace CSS/JS
-  const cssFile = isProduction ? 'base.min.css' : 'base.css';
-  const cssPath = `/css/${cssFile}`;
+  const baseFile = isProduction ? 'base.min' : 'base';
   sourceFile = sourceFile.pipe(
     replaceHTML({
-      css: `<link type="text/css" rel="stylesheet" href="${cssPath}">`
+      css: `<link type="text/css" rel="stylesheet" href="/css/${baseFile}.css">`,
+      js: `<script src="/js/${baseFile}.js"></script>`
     })
   );
 
@@ -366,13 +384,14 @@ gulp.task('serve', () => {
 
   // watches for any file change and re-compile
   gulp.watch(
-    './src/html/**/*.+(json|nunjucks|nj|njk|md|markdown)',
+    './src/html/**/*.+(js|json|nunjucks|nj|njk|md|markdown)',
     gulp.series(htmlTasks)
   );
   gulp.watch('./src/scss/**/*.scss', gulp.series('scss'));
+  gulp.watch('./src/js/**/*.js', gulp.series('js'));
 
   // watch for output change and hot-reload to show latest
-  gulp.watch(`./${directory}/**/*.(html|css)`).on('change', reload);
+  gulp.watch(`./${directory}/**/*.(html|css|js)`).on('change', reload);
 });
 
 /******************************************************************************\
@@ -382,7 +401,7 @@ gulp.task('serve', () => {
  * compile: scss
  * compile: nunjucks
  * compile: markdown
- * move fonts over
+ * move fonts/images/videos over
  *
  * start server (DEV ONLY)
 \******************************************************************************/

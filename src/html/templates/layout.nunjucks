@@ -11,6 +11,7 @@
     {{ content | safe }}
 
     <!-- build:js -->
+      <!-- EVERYTHING WITHIN HERE WILL BE REPLACED WITH SCRIPTS -->
     <!-- endbuild -->
 
     {# hook to allow page specific javascript to be added here #}
