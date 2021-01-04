@@ -167,7 +167,7 @@ gulp.task('nunjucks', () => {
         const fileInfo = util.parseFilePath(file.path);
 
         // set path to json file, specific to the HTML page we are compiling!
-        const pathToFile = `./src/html/data/${fileInfo.subPath}.json`;
+        const pathToFile = `./src/html/data${fileInfo.subPath}.json`;
 
         // delete cache, we always want the latest json data...
         delete require.cache[require.resolve(pathToFile)];

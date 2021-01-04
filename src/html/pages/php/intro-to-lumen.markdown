@@ -8,4 +8,12 @@ tags: php code howto
 
 # Intro to Lumen
 
-Welcome to this new page/post
+## (example post)
+
+This is an example of a sub-directory page and pathing still working.
+
+To edit, see: **/src/html/pages/php/intro-to-lumen.markdown**
+
+---
+
+[return home](/index.html)
