@@ -9,4 +9,17 @@ body {
   font-size: 14px;
   line-height: 1.5;
   padding: 20px;
+
+  &.dark-mode {
+    background-color: $logCabin;
+    color: $tara;
+
+    svg {
+      fill: $tara;
+    }
+
+    a {
+      color: $shakespeare;
+    }
+  }
 }

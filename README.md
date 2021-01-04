@@ -24,7 +24,7 @@ html/css/js + markdown + gulp automation + hot-reloading to create lightweight s
 - CSS & JS Minified
 - Dark Mode check with JavaScript (adds `.dark-mode` to body)
 - Markdown support + Front Matter for page data
-- Meta supported: title, keywords, description, canonical, robots, etc.
+- Meta supported: title, description, keywords, canonical, robots, etc.
 - Relative / Absolute pathing handled for you
 - Build stats
   - Page count

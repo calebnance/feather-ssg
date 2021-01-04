@@ -13,9 +13,11 @@
       welcome to feather ssg
     </h1>
     
-    <a href="/base-elements.html" role="button">Base Elements</a>
-    <a href="/features.html" role="button">Features</a>
-    <a href="/php/intro-to-lumen.html" role="button">Example of Sub-Directory Page</a>
+    <ul>
+      <li><a href="/features.html" role="button">Features</a></li>
+      <li><a href="/html-elements.html" role="button">HTML Elements</a></li>
+      <li><a href="/php/intro-to-lumen.html" role="button">Example of Sub-Directory Page</a></li>
+    </ul>
   </div>
 {% endblock %}
 

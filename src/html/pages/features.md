@@ -1,12 +1,12 @@
 ---
 layout: post
-metaTitle: Quick Features
-metaDescription: here is the meta for the Quick Features page
-category: javascript
+metaTitle: Features of feather ssg
+metaDescription: feather is back to the basics
+category: html
 tags: javascript code howto
 ---
 
-# Features of Feather SSG
+# Features of feather ssg
 
 This is a return to a simple HTML/CSS/JavaScript dev environment built with **Production** in mind.
 
@@ -17,3 +17,7 @@ This is a return to a simple HTML/CSS/JavaScript dev environment built with **Pr
 - HTML, CSS and JS minified for fast page loads
 - **Dark Mode** check with JavaScript (adds `.dark-mode` to body)
 - Data hydration from supporting **json** or **Front Matter**
+
+---
+
+[return home](/index.html)
