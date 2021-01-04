@@ -1,5 +1,6 @@
 'use strict';
 
+const fs = require('fs');
 const path = require('path');
 
 // grab the configuration file
@@ -56,4 +57,26 @@ function parseFilePath(filePath) {
   };
 }
 
-module.exports = { lineStretchToEnd, formatBytes, parseFilePath };
+// create sitemap
+// reference: https://www.sitemaps.org/protocol.html
+function createSitemap(pages) {
+  let urls = '';
+  pages.forEach((url, index) => {
+    const isLast = index + 1 === pages.length;
+    const endOfLine = isLast ? '' : '\r\n';
+    urls += `  <url>\r\n    <loc>${url}</loc>\r\n  </url>${endOfLine}`;
+  });
+  const siteMapContent = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${urls}
+</urlset>`;
+
+  fs.writeFileSync('static_prod/sitemap.xml', siteMapContent);
+}
+
+module.exports = {
+  createSitemap,
+  formatBytes,
+  lineStretchToEnd,
+  parseFilePath
+};

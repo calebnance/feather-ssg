@@ -161,8 +161,6 @@ gulp.task('nunjucks', () => {
     .src('./src/html/pages/**/*.+(nunjucks|nj|njk)')
     .pipe(
       data(file => {
-        this.pageCount += 1;
-
         // get direct path of page
         const fileInfo = util.parseFilePath(file.path);
 
@@ -194,6 +192,9 @@ gulp.task('nunjucks', () => {
         // set canonical
         combinedData.canonical = fileInfo.fullPath;
         // combinedData.content = '<h1>hello world</h1>';
+
+        // add to pages
+        this.pages.push(fileInfo.fullPath);
 
         return combinedData;
       }).on('error', pingError)
@@ -260,8 +261,6 @@ gulp.task('markdown', () => {
     .src('./src/html/pages/**/*.+(md|markdown)')
     .pipe(
       data(async file => {
-        this.pageCount += 1;
-
         // get direct path of page
         const fileInfo = util.parseFilePath(file.path);
 
@@ -283,6 +282,9 @@ gulp.task('markdown', () => {
         };
         // console.log('combinedData');
         // console.log(combinedData);
+
+        // add to pages
+        this.pages.push(fileInfo.fullPath);
 
         return combinedData;
       }).on('error', pingError)
@@ -317,7 +319,7 @@ gulp.task('markdown', () => {
 
 gulp.task('dataStart', done => {
   this.categories = [];
-  this.pageCount = 0;
+  this.pages = [];
 
   done();
 });
@@ -328,9 +330,18 @@ gulp.task('dataEnd', done => {
   console.log('_+_+_+_+_+_+_+_+_+_+_');
   console.log('---------------------');
 
-  console.log('pageCount', chalk.black.bgGreen(` ${this.pageCount} `));
+  console.log('page count', chalk.black.bgGreen(` ${this.pages.length} `));
   console.log('_+_+_+_+_+_+_+_+_+_+_');
   console.log('---------------------');
+
+  console.log('pages');
+  console.log(this.pages);
+  console.log('_+_+_+_+_+_+_+_+_+_+_');
+  console.log('---------------------');
+
+  // create sitemap
+  util.createSitemap(this.pages);
+
   done();
 });
 
