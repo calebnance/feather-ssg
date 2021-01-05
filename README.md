@@ -26,6 +26,7 @@ html/css/js + markdown + gulp automation + hot-reloading to create lightweight s
 - Markdown support + Front Matter for page data
 - Meta supported: title, description, keywords, canonical, robots, etc.
 - Relative / Absolute pathing handled for you
+- Sitemap.xml created
 - Build stats
   - Page count
   - CSS before and after minification
@@ -37,7 +38,6 @@ html/css/js + markdown + gulp automation + hot-reloading to create lightweight s
 - [ ] Show HTML before and after sizes in build report
 - [ ] Use [purgecss](https://purgecss.com/plugins/gulp.html#installation)?
 - [ ] Font face
-- [ ] Sitemap (maybe a cool example of all urls being produced, but also for xml file
 - [ ] Theming (+ predefined palettes, scss variables and root css usage)
 
 ## Install
