@@ -339,8 +339,10 @@ gulp.task('dataEnd', done => {
   console.log('_+_+_+_+_+_+_+_+_+_+_');
   console.log('---------------------');
 
-  // create sitemap
-  util.createSitemap(this.pages);
+  if (isProduction) {
+    // create sitemap
+    util.createSitemap(this.pages);
+  }
 
   done();
 });
