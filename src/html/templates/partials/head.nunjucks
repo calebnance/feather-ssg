@@ -7,6 +7,7 @@
   <meta name="Description" content="{{ (metaDescription) | safe }}" />
   <meta name="robots" content="{{ (metaRobots) | safe }}">
   <link rel="canonical" href="{{ canonical }}">
+  <meta name="generator" content="feather ssg" />
 
   <!-- build:css -->
     <!-- EVERYTHING WITHIN HERE WILL BE REPLACED WITH STYLE LINK -->
