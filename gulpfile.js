@@ -326,9 +326,9 @@ gulp.task('dataStart', done => {
 
 gulp.task('dataEnd', done => {
   console.log('---------------------');
-  console.log('categories', this.categories);
-  console.log('_+_+_+_+_+_+_+_+_+_+_');
-  console.log('---------------------');
+  // console.log('categories', this.categories);
+  // console.log('_+_+_+_+_+_+_+_+_+_+_');
+  // console.log('---------------------');
 
   console.log('page count', chalk.black.bgGreen(` ${this.pages.length} `));
   console.log('_+_+_+_+_+_+_+_+_+_+_');
