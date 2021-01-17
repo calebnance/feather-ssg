@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html lang="en"{% if htmlClass|length %} class="{{ htmlClass }}"{% endif %}>
-  {% include "partials/head.nunjucks" %}
+  {% include "partials/head.njk" %}
 
   <body{% if bodyClass|length %} class="{{ bodyClass }}"{% endif %}>
-
+    
     {# page specific HTML will be added here #}
     {% block content %}
     {% endblock %}
     
     {{ content | safe }}
-
+    
     <!-- build:js -->
       <!-- EVERYTHING WITHIN HERE WILL BE REPLACED WITH SCRIPTS -->
     <!-- endbuild -->
@@ -17,6 +17,6 @@
     {# hook to allow page specific javascript to be added here #}
     {% block pageSpecificJs %}
     {% endblock %}
-
+    
   </body>
 </html>

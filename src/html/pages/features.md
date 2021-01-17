@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: page
 metaTitle: Features of feather ssg
 metaDescription: feather is back to the basics
 category: html

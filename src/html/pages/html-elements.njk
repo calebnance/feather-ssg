@@ -1,5 +1,5 @@
 {# base-elements page #}
-{% extends "post.njk" %}
+{% extends "page.njk" %}
 
 {# setting page specific content #}
 {% block content %}
@@ -141,5 +141,5 @@ line breaks
 
 {# setting page specific js #}
 {% block pageSpecificJs %}
-  {% include "partials/include-jquery.nunjucks" %}
+  {% include "partials/include-jquery.njk" %}
 {% endblock %}
