@@ -1,5 +1,5 @@
 {# index page #}
-{% extends "layout.nunjucks" %}
+{% extends "page.njk" %}
 
 {# setting page specific css #}
 {% block pageSpecificCss %}
@@ -9,7 +9,7 @@
 {% block content %}
   <div class="container">
     <h1>
-      {% include "icons/feather.nunjucks" %}
+      {% include "icons/feather.njk" %}
       welcome to feather ssg
     </h1>
     

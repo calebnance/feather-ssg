@@ -158,7 +158,7 @@ gulp.task('nunjucks', () => {
   const defaultData = require('./src/html/default-data.json');
 
   let sourceFile = gulp
-    .src('./src/html/pages/**/*.+(nunjucks|nj|njk)')
+    .src('./src/html/pages/**/*.njk')
     .pipe(
       data(file => {
         // get direct path of page
@@ -191,7 +191,6 @@ gulp.task('nunjucks', () => {
 
         // set canonical
         combinedData.canonical = fileInfo.fullPath;
-        // combinedData.content = '<h1>hello world</h1>';
 
         // add to pages
         this.pages.push(fileInfo.fullPath);
@@ -377,7 +376,7 @@ gulp.task('videos', () => {
 /******************************************************************************\
  * serve up static files (with hot-reload)
  *
- * watches for changes made to html(nunjucks|markdown) + json + scss + js
+ * watches for changes made to html(njk|markdown) + json + scss + js
  * hot-reloads browser(s) connected
 \******************************************************************************/
 gulp.task('serve', () => {
@@ -397,7 +396,7 @@ gulp.task('serve', () => {
 
   // watches for any file change and re-compile
   gulp.watch(
-    './src/html/**/*.+(js|json|nunjucks|nj|njk|md|markdown)',
+    './src/html/**/*.+(js|json|njk|md|markdown)',
     gulp.series(htmlTasks)
   );
   gulp.watch('./src/scss/**/*.scss', gulp.series('scss'));
