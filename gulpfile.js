@@ -399,8 +399,12 @@ gulp.task('serve', () => {
     './src/html/**/*.+(js|json|njk|md|markdown)',
     gulp.series(htmlTasks)
   );
-  gulp.watch('./src/scss/**/*.scss', gulp.series('scss'));
-  gulp.watch('./src/js/**/*.js', gulp.series('js'));
+  gulp.watch(
+    './src/scss/**/*.scss',
+    { ignoreInitial: false },
+    gulp.series('scss')
+  );
+  gulp.watch('./src/js/**/*.js', { ignoreInitial: false }, gulp.series('js'));
 
   // watch for output change and hot-reload to show latest
   gulp.watch(`./${directory}/**/*.(html|css|js)`).on('change', reload);
