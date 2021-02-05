@@ -397,6 +397,7 @@ gulp.task('serve', () => {
   // watches for any file change and re-compile
   gulp.watch(
     './src/html/**/*.+(js|json|njk|md|markdown)',
+    { ignoreInitial: false },
     gulp.series(htmlTasks)
   );
   gulp.watch(

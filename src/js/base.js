@@ -1,5 +1,6 @@
 /* dark mode: on load and on change listener */
 const darkModeClass = 'dark-mode';
+
 if (
   window.matchMedia &&
   window.matchMedia('(prefers-color-scheme: dark)').matches
