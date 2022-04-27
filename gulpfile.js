@@ -179,8 +179,10 @@ gulp.task('nunjucks', () => {
           ...defaultData,
           ...pageData
         };
+
         // console.log('pageData', pageData);
         // console.log('combinedData', combinedData);
+        // console.log('==========================');
 
         // add category
         if (pageData.category in this.categories) {
@@ -397,15 +399,15 @@ gulp.task('serve', () => {
   // watches for any file change and re-compile
   gulp.watch(
     './src/html/**/*.+(js|json|njk|md|markdown)',
-    { ignoreInitial: false },
+    { ignoreInitial: true },
     gulp.series(htmlTasks)
   );
   gulp.watch(
     './src/scss/**/*.scss',
-    { ignoreInitial: false },
+    { ignoreInitial: true },
     gulp.series('scss')
   );
-  gulp.watch('./src/js/**/*.js', { ignoreInitial: false }, gulp.series('js'));
+  gulp.watch('./src/js/**/*.js', { ignoreInitial: true }, gulp.series('js'));
 
   // watch for output change and hot-reload to show latest
   gulp.watch(`./${directory}/**/*.(html|css|js)`).on('change', reload);
