@@ -21,7 +21,7 @@ const uglify = require('gulp-uglify');
 const siteConfig = require('./site-config.json');
 
 // import utility functions
-const util = require('./utility-functions');
+const util = require('./utilities');
 
 // breakout reload for usage after file changes detected
 const reload = browserSync.reload;

@@ -2,21 +2,28 @@
   "name": "feather-ssg",
   "author": "Caleb Nance",
   "license": "MIT",
-  "version": "0.0.1",
+  "version": "0.2.0",
   "scripts": {
     "dev": "NODE_ENV=dev gulp build",
     "prod": "NODE_ENV=prod gulp build",
-    "clean": "gulp clean"
+    "clean": "gulp clean",
+    "lint": "eslint gulpfile.js utilities.js"
   },
   "repository": {
     "type": "git",
     "url": "git@github.com:calebnance/feather-ssg.git"
   },
   "devDependencies": {
+    "babel-eslint": "^10.1.0",
     "browser-sync": "^2.26.7",
     "bs-console-qrcode": "^1.0.3",
     "chalk": "^3.0.0",
     "del": "^5.1.0",
+    "eslint": "^7.8.1",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-prettier": "^3.1.4",
     "gray-matter": "^4.0.2",
     "gulp": "^4.0.2",
     "gulp-clean-css": "^4.3.0",
@@ -29,9 +36,11 @@
     "gulp-replace-task": "^0.11.0",
     "gulp-sass": "^4.1.0",
     "gulp-uglify": "^3.0.2",
-    "node-notifier": "^6.0.0"
+    "node-notifier": "^6.0.0",
+    "prettier": "^2.7.1"
   },
   "prettier": {
-    "singleQuote": true
+    "singleQuote": true,
+    "trailingComma": "none"
   }
 }
