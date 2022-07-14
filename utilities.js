@@ -1,14 +1,12 @@
-'use strict';
-
 const fs = require('fs');
 const path = require('path');
 
 // grab the configuration file
 const siteConfig = require('./site-config.json');
 
-/******************************************************************************\
+/** ***************************************************************************\
  * utility functions
-\******************************************************************************/
+\**************************************************************************** */
 
 // stretch line in cli to the end
 function lineStretchToEnd(msg, lineSep) {
@@ -18,7 +16,7 @@ function lineStretchToEnd(msg, lineSep) {
   // if space is needed in message
   if (spaceNeeded > 0) {
     const spaceArray = Array.from(Array(spaceNeeded).keys());
-    spacer = spaceArray.map(item => ' ').join('');
+    spacer = spaceArray.map(() => ' ').join('');
   }
 
   return `${msg}${spacer}`;
@@ -34,7 +32,7 @@ function formatBytes(bytes, decimals = 2) {
 
   const i = Math.floor(Math.log(bytes) / Math.log(k));
 
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+  return `${parseFloat((bytes / k ** i).toFixed(dm))} ${sizes[i]}`;
 }
 
 // parse file path and create helpful file info object

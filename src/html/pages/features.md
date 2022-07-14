@@ -4,6 +4,7 @@ metaTitle: Features of feather ssg
 metaDescription: feather is back to the basics
 category: html
 tags: javascript code howto
+css: extra-style
 ---
 
 # Features of feather ssg
