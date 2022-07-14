@@ -15,7 +15,7 @@ const path = require('path');
 const rename = require('gulp-rename');
 const replace = require('gulp-replace-task');
 const replaceHTML = require('gulp-html-replace');
-const sass = require('gulp-sass');
+const sass = require('gulp-sass')(require('sass'));
 const uglify = require('gulp-uglify');
 
 // grab the configuration file
