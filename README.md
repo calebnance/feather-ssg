@@ -30,6 +30,7 @@ html/css/js + markdown + gulp automation + hot-reloading to create lightweight s
 - Build stats
   - Page count
   - CSS before and after minification
+- eslint/prettier
 
 ## Roadmap
 
