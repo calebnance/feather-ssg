@@ -5,6 +5,7 @@ const del = require('del');
 const data = require('gulp-data');
 const fs = require('fs');
 const gulp = require('gulp');
+const gulpReplace = require('gulp-replace');
 const htmlmin = require('gulp-htmlmin');
 const matter = require('gray-matter');
 const notifier = require('node-notifier');
@@ -24,14 +25,14 @@ const siteConfig = require('./site-config.json');
 const util = require('./utilities');
 
 // breakout reload for usage after file changes detected
-const reload = browserSync.reload;
+const { reload } = browserSync;
 
 // const sep = new Array(10).join('+-');
 // console.log('sep', sep);
 
-/******************************************************************************\
+/** ***************************************************************************\
  * ENVIRONMENT HANDLING
-\******************************************************************************/
+\**************************************************************************** */
 const envMode = process.env.NODE_ENV;
 const isProduction = process.env.NODE_ENV === 'prod';
 
@@ -42,11 +43,17 @@ const rootDirs = {
 };
 const directory = rootDirs[envMode];
 
-/******************************************************************************\
+/** ***************************************************************************\
  * TASK HANDLING DEPENDING ON ENVIRONMENT
-\******************************************************************************/
+\**************************************************************************** */
 // html tasks
-const htmlTasks = ['dataStart', 'nunjucks', 'markdown', 'dataEnd'];
+const htmlTasks = [
+  'dataStart',
+  'nunjucks',
+  'markdown',
+  'dataEnd',
+  'html-replace'
+];
 
 // asset tasks
 const assetTasks = ['fonts', 'images', 'videos'];
@@ -65,10 +72,10 @@ const buildTasks = isProduction
   ? sharedTasks.concat(prodTasks)
   : sharedTasks.concat(devTasks);
 
-/******************************************************************************\
+/** ***************************************************************************\
  * NOTIFY COMPLETED BUILD
-\******************************************************************************/
-gulp.task('notify-completed', done => {
+\**************************************************************************** */
+gulp.task('notify-completed', (done) => {
   const lineSep =
     ' --------------------------------------------------------------------- ';
   const modeUpper = envMode.toUpperCase();
@@ -82,32 +89,51 @@ gulp.task('notify-completed', done => {
   done();
 });
 
-/******************************************************************************\
+/** ***************************************************************************\
+ * notify developer at the os level, an error has occurred 
+\**************************************************************************** */
+const pingError = (error, type) => {
+  // if you want details of the error in the console
+  // console.log(error);
+  console.log(error.message);
+  console.log('=============================');
+  console.log('=+=+=+=+=+=+=+=+=+=+=+=+=+=+=');
+  // console.log(error.toString());
+
+  notifier.notify({
+    title: `${type} error!`,
+    message: error.message,
+    icon: path.join(__dirname, 'icon.png'),
+    sound: true
+  });
+
+  process.exit(1);
+};
+
+/** ***************************************************************************\
  * CLEAN STATIC DIRECTORIES
-\******************************************************************************/
+\**************************************************************************** */
 gulp.task('clean', () => {
   return del([`${rootDirs.dev}/**/*`, `${rootDirs.prod}/**/*`]);
 });
 
-/******************************************************************************\
+/** ***************************************************************************\
  * SCSS => CSS
-\******************************************************************************/
+\**************************************************************************** */
 gulp.task('scss', () => {
   // grab all scss and compile into css
   let sourceFile = gulp
     .src('./src/scss/**/*.scss')
-    .pipe(sass().on('error', error => pingError(error, 'scss')));
+    .pipe(sass().on('error', (error) => pingError(error, 'scss')));
 
   // minify css, if production build
   if (isProduction) {
     // clean css
     // https://github.com/jakubpawlowicz/clean-css#compatibility-modes
     console.log(chalk.black.bgBlue('-- CSS Files'));
-    const sourceFileMinified = gulp
-      .src('./src/scss/**/*.scss')
-      .pipe(sass().on('error', error => pingError(error, 'scss')))
+    sourceFile = sourceFile
       .pipe(
-        cleanCSS({ compatibility: '*' }, details => {
+        cleanCSS({ compatibility: '*' }, (details) => {
           const origSize = util.formatBytes(details.stats.originalSize);
           const miniSize = util.formatBytes(details.stats.minifiedSize);
 
@@ -118,11 +144,7 @@ gulp.task('scss', () => {
           );
         })
       )
-      .pipe(
-        rename(path => {
-          path.basename += '.min';
-        })
-      )
+      .pipe(rename({ suffix: '.min' }))
       .pipe(gulp.dest(`./${directory}/css`))
       .on('end', () => {
         console.log(chalk.black.bgBlue('------------'));
@@ -132,9 +154,9 @@ gulp.task('scss', () => {
   return sourceFile.pipe(gulp.dest(`./${directory}/css`));
 });
 
-/******************************************************************************\
+/** ***************************************************************************\
  * javascript
-\******************************************************************************/
+\**************************************************************************** */
 gulp.task('js', () => {
   // grab all js
   let sourceFile = gulp.src('./src/js/**/*.js');
@@ -142,7 +164,7 @@ gulp.task('js', () => {
   if (isProduction) {
     // minify js & rename
     sourceFile = sourceFile.pipe(uglify()).pipe(
-      rename(path => {
+      rename((path) => {
         path.basename += '.min';
       })
     );
@@ -151,30 +173,33 @@ gulp.task('js', () => {
   return sourceFile.pipe(gulp.dest(`./${directory}/js`));
 });
 
-/******************************************************************************\
+/** ***************************************************************************\
  * NUNJUCKS => HTML
-\******************************************************************************/
+\**************************************************************************** */
 gulp.task('nunjucks', () => {
   const defaultData = require('./src/html/default-data.json');
 
   let sourceFile = gulp
     .src('./src/html/pages/**/*.njk')
     .pipe(
-      data(file => {
+      data((file) => {
         // get direct path of page
         const fileInfo = util.parseFilePath(file.path);
 
         // set path to json file, specific to the HTML page we are compiling!
         const pathToFile = `./src/html/data${fileInfo.subPath}.json`;
 
-        // delete cache, we always want the latest json data...
-        delete require.cache[require.resolve(pathToFile)];
+        let pageData = {};
+        if (fs.existsSync(pathToFile)) {
+          // delete cache, we always want the latest json data...
+          delete require.cache[require.resolve(pathToFile)];
 
-        // log that we are grabbing data
-        console.log('grabbing data from: ' + pathToFile);
+          // grab specific page data
+          pageData = require(pathToFile);
+        } else {
+          console.log(chalk.red(`Extra metadata not found: ${pathToFile}`));
+        }
 
-        // grab specific page data
-        const pageData = require(pathToFile);
         const combinedData = {
           ...defaultData,
           ...pageData
@@ -203,7 +228,7 @@ gulp.task('nunjucks', () => {
     .pipe(
       nunjucksRender({
         path: './src/html/templates'
-      }).on('error', error => pingError(error, 'nunjucks'))
+      }).on('error', (error) => pingError(error, 'nunjucks'))
     );
 
   // replace CSS/JS
@@ -252,16 +277,16 @@ gulp.task('nunjucks', () => {
   return sourceFile.pipe(gulp.dest(`./${directory}`));
 });
 
-/******************************************************************************\
+/** ***************************************************************************\
  * MARKDOWN => HTML
-\******************************************************************************/
+\**************************************************************************** */
 gulp.task('markdown', () => {
   const defaultData = require('./src/html/default-data.json');
 
   let sourceFile = gulp
     .src('./src/html/pages/**/*.+(md|markdown)')
     .pipe(
-      data(async file => {
+      data(async (file) => {
         // get direct path of page
         const fileInfo = util.parseFilePath(file.path);
 
@@ -269,11 +294,14 @@ gulp.task('markdown', () => {
         const pinkMatter = matter(fileContent);
         const pageData = pinkMatter.data;
 
+        const { subPath } = fileInfo;
+        const pathHTML = `${subPath}.html`;
+
         // add category
         if (pageData.category in this.categories) {
-          this.categories[pageData.category].push(`${fileInfo.subPath}.html`);
+          this.categories[pageData.category].push(pathHTML);
         } else {
-          this.categories[pageData.category] = [`${fileInfo.subPath}.html`];
+          this.categories[pageData.category] = [pathHTML];
         }
 
         const combinedData = {
@@ -283,6 +311,16 @@ gulp.task('markdown', () => {
         };
         // console.log('combinedData');
         // console.log(combinedData);
+
+        // extra css?
+        if (combinedData?.css) {
+          // console.log('Extra CSS exists');
+          const subPathKey = subPath.substring(1).replace(/\//g, '-');
+          this.extraCss[subPathKey] = {
+            path: subPath,
+            css: combinedData.css
+          };
+        }
 
         // add to pages
         this.pages.push(fileInfo.fullPath);
@@ -318,27 +356,65 @@ gulp.task('markdown', () => {
   return sourceFile.pipe(gulp.dest(`./${directory}`));
 });
 
-gulp.task('dataStart', done => {
+/** ***************************************************************************\
+ * HTML Replace
+\**************************************************************************** */
+gulp.task('html-replace', () => {
+  const extraClassKeys = Object.keys(this.extraCss);
+  const extraClassObj = this.extraCss;
+
+  const dangleBase = '_base';
+
+  return gulp
+    .src(`./${directory}/**/*.html`)
+    .pipe(
+      // https://www.npmjs.com/package/gulp-replace
+      gulpReplace('[[EXTRA CSS]]', function handleReplace() {
+        // replaces instances of "filename" with "file.txt"
+        // this.file is also available for regex replace
+        // See https://github.com/gulpjs/vinyl#instance-properties for details on available properties
+        const filePathArray = this.file.path
+          .replace(this.file[dangleBase], '')
+          .split('.');
+        const filePath = filePathArray[0].replace('/', '').replace(/\//g, '-');
+
+        let replaceWith = '';
+
+        if (extraClassKeys.includes(filePath)) {
+          const { css } = extraClassObj[filePath];
+          const addMin = isProduction ? '.min' : '';
+
+          replaceWith = `<link type="text/css" rel="stylesheet" href="/css/${css}${addMin}.css">`;
+        }
+
+        return replaceWith;
+      })
+    )
+    .pipe(gulp.dest(`./${directory}`));
+});
+
+gulp.task('dataStart', (done) => {
   this.categories = [];
   this.pages = [];
+  this.extraCss = {};
 
   done();
 });
 
-gulp.task('dataEnd', done => {
-  console.log('---------------------');
+gulp.task('dataEnd', (done) => {
+  // console.log('---------------------');
   // console.log('categories', this.categories);
   // console.log('_+_+_+_+_+_+_+_+_+_+_');
   // console.log('---------------------');
 
-  console.log('page count', chalk.black.bgGreen(` ${this.pages.length} `));
-  console.log('_+_+_+_+_+_+_+_+_+_+_');
-  console.log('---------------------');
-
-  console.log('pages');
-  console.log(this.pages);
-  console.log('_+_+_+_+_+_+_+_+_+_+_');
-  console.log('---------------------');
+  // console.log('page count', chalk.black.bgGreen(` ${this.pages.length} `));
+  // console.log('_+_+_+_+_+_+_+_+_+_+_');
+  // console.log('---------------------');
+  //
+  // console.log('pages');
+  // console.log(this.pages);
+  // console.log('_+_+_+_+_+_+_+_+_+_+_');
+  // console.log('---------------------');
 
   if (isProduction) {
     // create sitemap
@@ -348,39 +424,39 @@ gulp.task('dataEnd', done => {
   done();
 });
 
-/******************************************************************************\
+/** ***************************************************************************\
  * MOVE FONTS
-\******************************************************************************/
+\**************************************************************************** */
 gulp.task('fonts', () => {
   return gulp
     .src('./src/assets/fonts/**/*')
     .pipe(gulp.dest(`./${directory}/fonts`));
 });
 
-/******************************************************************************\
+/** ***************************************************************************\
  * MOVE IMAGES
-\******************************************************************************/
+\**************************************************************************** */
 gulp.task('images', () => {
   return gulp
     .src('./src/assets/images/**/*')
     .pipe(gulp.dest(`./${directory}/images`));
 });
 
-/******************************************************************************\
+/** ***************************************************************************\
  * MOVE VIDEOS
-\******************************************************************************/
+\**************************************************************************** */
 gulp.task('videos', () => {
   return gulp
     .src('./src/assets/videos/**/*')
     .pipe(gulp.dest(`./${directory}/videos`));
 });
 
-/******************************************************************************\
+/** ***************************************************************************\
  * serve up static files (with hot-reload)
  *
  * watches for changes made to html(njk|markdown) + json + scss + js
  * hot-reloads browser(s) connected
-\******************************************************************************/
+\**************************************************************************** */
 gulp.task('serve', () => {
   browserSync.init({
     server: {
@@ -413,7 +489,7 @@ gulp.task('serve', () => {
   gulp.watch(`./${directory}/**/*.(html|css|js)`).on('change', reload);
 });
 
-/******************************************************************************\
+/** ***************************************************************************\
  * build tasks
  *
  * clean directories
@@ -423,26 +499,5 @@ gulp.task('serve', () => {
  * move fonts/images/videos over
  *
  * start server (DEV ONLY)
-\******************************************************************************/
+\**************************************************************************** */
 gulp.task('build', gulp.series(buildTasks));
-
-/******************************************************************************\
- * notify developer at the os level, an error has occurred 
-\******************************************************************************/
-pingError = (error, type) => {
-  // if you want details of the error in the console
-  // console.log(error);
-  console.log(error.message);
-  console.log('=============================');
-  console.log('=+=+=+=+=+=+=+=+=+=+=+=+=+=+=');
-  // console.log(error.toString());
-
-  notifier.notify({
-    title: `${type} error!`,
-    message: error.message,
-    icon: path.join(__dirname, 'icon.png'),
-    sound: true
-  });
-
-  process.exit(1);
-};

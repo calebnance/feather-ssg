@@ -4,7 +4,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <title>{{ (metaTitle) | safe }}</title>
-  <meta name="Description" content="{{ (metaDescription) | safe }}" />
+  <meta name="description" content="{{ (metaDescription) | safe }}" />
   <meta name="robots" content="{{ (metaRobots) | safe }}">
   <link rel="canonical" href="{{ canonical }}">
   <meta name="generator" content="feather ssg" />
@@ -12,6 +12,8 @@
   <!-- build:css -->
     <!-- EVERYTHING WITHIN HERE WILL BE REPLACED WITH STYLE LINK -->
   <!-- endbuild -->
+  
+  [[EXTRA CSS]]
 
   {# hook to allow page specific css to be added here #}
   {% block pageSpecificCss %}
