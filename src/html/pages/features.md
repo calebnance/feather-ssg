@@ -2,6 +2,9 @@
 layout: page
 metaTitle: Features of feather ssg
 metaDescription: feather is back to the basics
+title: Features of feather ssg
+dateCreated: 2022-01-22 14:00:00 EDT
+dateUpdated: 2022-04-22 11:00:00 EDT
 category: html
 tags: javascript code howto
 css: extra-style

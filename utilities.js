@@ -40,11 +40,15 @@ function parseFilePath(filePath) {
   const fileExt = path.extname(filePath);
   const fileName = path.basename(filePath, fileExt);
   const pathNoExt = path.dirname(filePath);
+
   const pathArrBase = pathNoExt.split('/src/html/');
   pathArrBase.shift();
+
   const pathArr = pathArrBase[0].split('/');
   pathArr.shift();
-  const subDirPath = pathArr[0] === undefined ? '' : `${pathArr[0]}/`;
+
+  const pathDepth = pathArr.join('/');
+  const subDirPath = pathArr[0] === undefined ? '' : `${pathDepth}/`;
   const subPath = `/${subDirPath}${fileName}`;
 
   return {
@@ -59,10 +63,10 @@ function parseFilePath(filePath) {
 // reference: https://www.sitemaps.org/protocol.html
 function createSitemap(pages) {
   let urls = '';
-  pages.forEach((url, index) => {
+  Object.keys(pages).forEach((url, index) => {
     const isLast = index + 1 === pages.length;
     const endOfLine = isLast ? '' : '\r\n';
-    urls += `  <url>\r\n    <loc>${url}</loc>\r\n  </url>${endOfLine}`;
+    urls += `  <url>\r\n    <loc>${siteConfig.baseUrl}${url}.html</loc>\r\n  </url>${endOfLine}`;
   });
   const siteMapContent = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">

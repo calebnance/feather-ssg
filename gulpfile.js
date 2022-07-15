@@ -51,8 +51,8 @@ const htmlTasks = [
   'dataStart',
   'nunjucks',
   'markdown',
-  'dataEnd',
-  'html-replace'
+  'html-replace',
+  'dataEnd'
 ];
 
 // asset tasks
@@ -144,11 +144,7 @@ gulp.task('scss', () => {
           );
         })
       )
-      .pipe(rename({ suffix: '.min' }))
-      .pipe(gulp.dest(`./${directory}/css`))
-      .on('end', () => {
-        console.log(chalk.black.bgBlue('------------'));
-      });
+      .pipe(rename({ suffix: '.min' }));
   }
 
   return sourceFile.pipe(gulp.dest(`./${directory}/css`));
@@ -163,15 +159,49 @@ gulp.task('js', () => {
 
   if (isProduction) {
     // minify js & rename
-    sourceFile = sourceFile.pipe(uglify()).pipe(
-      rename((path) => {
-        path.basename += '.min';
-      })
-    );
+    sourceFile = sourceFile.pipe(uglify()).pipe(rename({ suffix: '.min' }));
   }
 
   return sourceFile.pipe(gulp.dest(`./${directory}/js`));
 });
+
+/** ***************************************************************************\
+ * create data for future use / module creation
+\**************************************************************************** */
+const moduleCreation = (props) => {
+  const { category, dateCreated, pathHTML, subPath, title } = props;
+
+  const options = {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    hour12: true,
+    minute: '2-digit'
+  };
+
+  const date = new Date(dateCreated);
+  const dateObj = {
+    dateCreated: date,
+    dateCreatedFormat: date.toLocaleString('en-US', options),
+    subPath,
+    title
+  };
+
+  // add datetime
+  if (category in this.pagesChronological) {
+    this.pagesChronological[category].push(dateObj);
+  } else {
+    this.pagesChronological[category] = [dateObj];
+  }
+
+  // add category
+  if (category in this.categories) {
+    this.categories[category].push(pathHTML);
+  } else {
+    this.categories[category] = [pathHTML];
+  }
+};
 
 /** ***************************************************************************\
  * NUNJUCKS => HTML
@@ -186,8 +216,11 @@ gulp.task('nunjucks', () => {
         // get direct path of page
         const fileInfo = util.parseFilePath(file.path);
 
+        const { fullPath, subPath } = fileInfo;
+        const pathHTML = `${subPath}.html`;
+
         // set path to json file, specific to the HTML page we are compiling!
-        const pathToFile = `./src/html/data${fileInfo.subPath}.json`;
+        const pathToFile = `./src/html/data${subPath}.json`;
 
         let pageData = {};
         if (fs.existsSync(pathToFile)) {
@@ -202,25 +235,21 @@ gulp.task('nunjucks', () => {
 
         const combinedData = {
           ...defaultData,
-          ...pageData
+          ...pageData,
+          canonical: fullPath
         };
 
-        // console.log('pageData', pageData);
-        // console.log('combinedData', combinedData);
-        // console.log('==========================');
+        const { category } = pageData;
+        const { dateCreated, title } = combinedData;
 
-        // add category
-        if (pageData.category in this.categories) {
-          this.categories[pageData.category].push(`${fileInfo.subPath}.html`);
-        } else {
-          this.categories[pageData.category] = [`${fileInfo.subPath}.html`];
-        }
-
-        // set canonical
-        combinedData.canonical = fileInfo.fullPath;
+        // use data for future module creation
+        moduleCreation({ category, dateCreated, pathHTML, subPath, title });
 
         // add to pages
-        this.pages.push(fileInfo.fullPath);
+        this.pages[subPath] = {
+          category,
+          fullPath
+        };
 
         return combinedData;
       }).on('error', pingError)
@@ -294,23 +323,23 @@ gulp.task('markdown', () => {
         const pinkMatter = matter(fileContent);
         const pageData = pinkMatter.data;
 
-        const { subPath } = fileInfo;
+        const { fullPath, subPath } = fileInfo;
         const pathHTML = `${subPath}.html`;
-
-        // add category
-        if (pageData.category in this.categories) {
-          this.categories[pageData.category].push(pathHTML);
-        } else {
-          this.categories[pageData.category] = [pathHTML];
-        }
 
         const combinedData = {
           ...defaultData,
           ...pageData,
-          canonical: fileInfo.fullPath
+          canonical: fullPath
         };
+
         // console.log('combinedData');
         // console.log(combinedData);
+
+        const { category } = pageData;
+        const { dateCreated, title } = combinedData;
+
+        // use data for future module creation
+        moduleCreation({ category, dateCreated, pathHTML, subPath, title });
 
         // extra css?
         if (combinedData?.css) {
@@ -323,7 +352,10 @@ gulp.task('markdown', () => {
         }
 
         // add to pages
-        this.pages.push(fileInfo.fullPath);
+        this.pages[subPath] = {
+          category,
+          fullPath
+        };
 
         return combinedData;
       }).on('error', pingError)
@@ -362,21 +394,32 @@ gulp.task('markdown', () => {
 gulp.task('html-replace', () => {
   const extraClassKeys = Object.keys(this.extraCss);
   const extraClassObj = this.extraCss;
+  const pagesArray = this.pages;
 
   const dangleBase = '_base';
+
+  // sort dateCreated chronologically
+  const sortDate = (array) =>
+    array.sort((a, b) => new Date(a.dateCreated) - new Date(b.dateCreated));
+
+  Object.values(this.pagesChronological).map((categoryBlock) =>
+    sortDate(categoryBlock)
+  );
+
+  const chronologicalArray = this.pagesChronological;
 
   return gulp
     .src(`./${directory}/**/*.html`)
     .pipe(
       // https://www.npmjs.com/package/gulp-replace
       gulpReplace('[[EXTRA CSS]]', function handleReplace() {
-        // replaces instances of "filename" with "file.txt"
         // this.file is also available for regex replace
         // See https://github.com/gulpjs/vinyl#instance-properties for details on available properties
         const filePathArray = this.file.path
           .replace(this.file[dangleBase], '')
           .split('.');
-        const filePath = filePathArray[0].replace('/', '').replace(/\//g, '-');
+        const subPath = filePathArray[0];
+        const filePath = subPath.replace('/', '').replace(/\//g, '-');
 
         let replaceWith = '';
 
@@ -390,12 +433,62 @@ gulp.task('html-replace', () => {
         return replaceWith;
       })
     )
+    .pipe(
+      gulpReplace('[[PREV/NEXT]]', function handleReplace() {
+        const filePathArray = this.file.path
+          .replace(this.file[dangleBase], '')
+          .split('.');
+        const subPath = filePathArray[0];
+
+        // get prev/next posts in category group
+        const { category } = pagesArray[subPath];
+        const categoryGrouped = chronologicalArray[category];
+        let indexFound = null;
+        categoryGrouped.forEach((page, index) => {
+          if (page.subPath === subPath) {
+            indexFound = index;
+          }
+        });
+
+        const prevIndex = indexFound - 1;
+        let prevPost = null;
+        if (indexFound !== 0) {
+          prevPost = categoryGrouped[prevIndex];
+        }
+
+        const nextIndex = indexFound + 1;
+        let nextPost = null;
+        if (categoryGrouped.length > nextIndex) {
+          nextPost = categoryGrouped[nextIndex];
+        }
+
+        let replaceWith = '';
+
+        if (prevPost !== null || nextPost !== null) {
+          let prevDiv = '';
+          let nextDiv = '';
+
+          if (prevPost !== null) {
+            prevDiv = `<a class="prev-post" href="${prevPost.subPath}.html"><div class="prev-text">Prev</div><div class="prev-title">${prevPost.title}</div></a>`;
+          }
+
+          if (nextPost !== null) {
+            nextDiv = `<a class="next-post" href="${nextPost.subPath}.html"><div class="next-text">Next</div><div class="next-title">${nextPost.title}</div></a>`;
+          }
+
+          replaceWith = `<div class="container-next-prev">${prevDiv}${nextDiv}</div>`;
+        }
+
+        return replaceWith;
+      })
+    )
     .pipe(gulp.dest(`./${directory}`));
 });
 
 gulp.task('dataStart', (done) => {
   this.categories = [];
   this.pages = [];
+  this.pagesChronological = {};
   this.extraCss = {};
 
   done();
@@ -406,13 +499,18 @@ gulp.task('dataEnd', (done) => {
   // console.log('categories', this.categories);
   // console.log('_+_+_+_+_+_+_+_+_+_+_');
   // console.log('---------------------');
-
+  //
   // console.log('page count', chalk.black.bgGreen(` ${this.pages.length} `));
   // console.log('_+_+_+_+_+_+_+_+_+_+_');
   // console.log('---------------------');
-  //
+
   // console.log('pages');
   // console.log(this.pages);
+  // console.log('_+_+_+_+_+_+_+_+_+_+_');
+  // console.log('---------------------');
+  //
+  // console.log('pagesChronological::SORTED');
+  // console.log(this.pagesChronological);
   // console.log('_+_+_+_+_+_+_+_+_+_+_');
   // console.log('---------------------');
 
