@@ -510,7 +510,7 @@ gulp.task('dataEnd', (done) => {
   // console.log('categories', this.categories);
   // console.log('_+_+_+_+_+_+_+_+_+_+_');
   // console.log('---------------------');
-  //
+
   // console.log('page count', chalk.black.bgGreen(` ${this.pages.length} `));
   // console.log('_+_+_+_+_+_+_+_+_+_+_');
   // console.log('---------------------');
@@ -519,7 +519,7 @@ gulp.task('dataEnd', (done) => {
   // console.log(this.pages);
   // console.log('_+_+_+_+_+_+_+_+_+_+_');
   // console.log('---------------------');
-  //
+
   // console.log('pagesChronological::SORTED');
   // console.log(this.pagesChronological);
   // console.log('_+_+_+_+_+_+_+_+_+_+_');
@@ -583,7 +583,7 @@ gulp.task('serve', () => {
 
   // watches for any file change and re-compile
   gulp.watch(
-    './src/html/**/*.+(js|json|njk|md|markdown)',
+    './src/html/**/*.(js|json|njk|md|markdown)',
     { ignoreInitial: true },
     gulp.series(htmlTasks)
   );
