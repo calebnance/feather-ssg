@@ -11,6 +11,8 @@ css: prism
 
 # HTML Snippets
 
+<h2 class="heading-snippet">Basic HTML Starter</h2>
+
 ```html
 <!DOCTYPE html>
 <html lang="en">

@@ -2,32 +2,16 @@
 // /////////////////////////////////////////////////////////////////////////////
 @import 'normalize';
 @import 'variables';
+@import 'elements';
+@import 'components';
+@import 'code-snippet';
 
 body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial,
     sans-serif, Apple Color Emoji, Segoe UI Emoji;
   font-size: 14px;
   line-height: 1.5;
   padding: 20px;
-
-  &.dark-mode {
-    background-color: $logCabin;
-    color: $tara;
-
-    svg {
-      fill: $tara;
-    }
-
-    a {
-      color: $shakespeare;
-    }
-  }
-}
-
-pre {
-  background-color: #5f5f5f;
-  border-radius: 8px;
-  margin: 16px 0 32px;
-  overflow: hidden;
-  padding: 16px;
 }

@@ -493,7 +493,7 @@ gulp.task('html-replace', () => {
             nextDiv = `<a class="next-post" href="${nextPost.subPath}.html"><div class="next-text">Next</div><div class="next-title">${nextPost.title}</div></a>`;
           }
 
-          replaceWith = `<div class="container-next-prev">${prevDiv}${nextDiv}</div>`;
+          replaceWith = `<div class="container-prev-next">${prevDiv}${nextDiv}</div>`;
         }
 
         return replaceWith;

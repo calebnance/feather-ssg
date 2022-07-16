@@ -1,12 +1,49 @@
 // colors
 // /////////////////////////////////////////////////////////////////////////////
-$black: #000;
-$grey: #999;
-$red: #f00;
-$yellow: #ff0;
-$white: #fff;
+$black: #000000;
+$grey: #999999;
+$white: #ffffff;
+
+// debug colors
+$red: #ff0000;
+$yellow: #ffff00;
 
 // checked for contrast passing: https://colorable.jxnblk.com/4cadca/121311
 $logCabin: #121311;
+$jet: #2a2b29;
 $shakespeare: #4cadca;
+$tealBlue: #2e6879;
 $tara: #ecfaf0;
+// hue of tara: https://maketintsandshades.com/#ecfaf0
+// get name: https://coolors.co/474b48
+$davysGrey: #474b48;
+$graniteGray: #5f5f5f;
+
+:root {
+  --color-bg: #{$white};
+  --color-bg-secondary: #{$tara};
+  --color-bg-code-snippet: #{$graniteGray};
+
+  --color-border: #{$logCabin};
+
+  --color-link: #{$tealBlue};
+
+  --color-text: #{$logCabin};
+
+  --fill-svg: #{$logCabin};
+  --fill-svg-inverse: #{$white};
+
+  @media (prefers-color-scheme: dark) {
+    --color-bg: #{$jet};
+    --color-bg-secondary: #{$davysGrey};
+
+    --color-border: #{$tara};
+
+    --color-link: #{$shakespeare};
+
+    --color-text: #{$white};
+
+    --fill-svg: #{$white};
+    --fill-svg-inverse: #{$logCabin};
+  }
+}

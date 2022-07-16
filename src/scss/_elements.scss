@@ -1,0 +1,26 @@
+a {
+  color: var(--color-link);
+}
+
+h1 {
+  font-size: 24px;
+
+  @media screen and (min-width: 600px) {
+    font-size: 32px;
+  }
+
+  svg {
+    margin-right: 8px;
+    height: 20px;
+    width: 20px;
+
+    @media screen and (min-width: 600px) {
+      height: 24px;
+      width: 24px;
+    }
+  }
+}
+
+svg {
+  fill: var(--fill-svg);
+}
