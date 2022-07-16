@@ -42,12 +42,24 @@
   
   <p>The CSS <code>background-color</code> property defines the background color of an element.</p>
   
-  <pre>
-Text in a pre element
-is displayed in a fixed-width
-font, and it preserves
-both spaces and
-line breaks
+  <pre class="language-javascript">
+<code class="language-javascript">/* dark mode: on load and on change listener */
+const darkModeClass = 'dark-mode';
+
+if (
+  window.matchMedia &&
+  window.matchMedia('(prefers-color-scheme: dark)').matches
+) {
+  document.body.classList.add(darkModeClass);
+}
+
+window
+  .matchMedia('(prefers-color-scheme: dark)')
+  .addEventListener('change', (e) => {
+    const classFunc = e.matches ? 'add' : 'remove';
+    document.body.classList[classFunc](darkModeClass);
+});
+</code>
 </pre>
   
   <img src="/images/150-square.jpg" alt="placeholder image that is 150 pixel squared" />
@@ -142,4 +154,5 @@ line breaks
 {# setting page specific js #}
 {% block pageSpecificJs %}
   {% include "partials/include-jquery.njk" %}
+  <script src="/js/prism-default.min.js"></script>
 {% endblock %}

@@ -256,6 +256,16 @@ gulp.task('nunjucks', () => {
         // use data for future module creation
         moduleCreation({ category, dateCreated, pathHTML, subPath, title });
 
+        // extra css?
+        if (combinedData?.css) {
+          // console.log('Extra CSS exists');
+          const subPathKey = subPath.substring(1).replace(/\//g, '-');
+          this.extraCss[subPathKey] = {
+            path: subPath,
+            css: combinedData.css
+          };
+        }
+
         // add to pages
         this.pages[subPath] = {
           category,
