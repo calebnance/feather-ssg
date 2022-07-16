@@ -503,7 +503,9 @@ gulp.task('html-replace', () => {
             nextDiv = `<a class="next-post" href="${nextPost.subPath}.html"><div class="next-text">Next</div><div class="next-title">${nextPost.title}</div></a>`;
           }
 
-          replaceWith = `<div class="container-prev-next">${prevDiv}${nextDiv}</div>`;
+          const onlyNext = prevDiv === '' && nextDiv !== '' ? ' only-next' : '';
+
+          replaceWith = `<div class="container-prev-next${onlyNext}">${prevDiv}${nextDiv}</div>`;
         }
 
         return replaceWith;

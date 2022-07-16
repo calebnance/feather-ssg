@@ -1,0 +1,29 @@
+// previous/next
+// /////////////////////////////////////////////////////////////////////////////
+.container-prev-next {
+  align-items: center;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 32px;
+  padding: 8px;
+
+  a {
+    border-radius: 8px;
+    padding: 8px;
+    text-decoration: none;
+
+    &:hover {
+      background-color: var(--color-bg-secondary);
+    }
+  }
+
+  &.only-next {
+    justify-content: flex-end;
+  }
+
+  & .next-post {
+    text-align: right;
+  }
+}
