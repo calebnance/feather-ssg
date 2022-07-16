@@ -24,7 +24,8 @@ html/css/js + markdown + gulp automation + hot-reloading to create lightweight s
 - CSS & JS Minified
 - Dark Mode check with JavaScript (adds `.dark-mode` to body)
 - Markdown support + Front Matter for page data
-- Meta supported: title, description, keywords, canonical, robots, etc.
+- Meta supported: title, description, canonical, robots, etc.
+- Next / Previous Posts generated (within it's category)
 - Relative / Absolute pathing handled for you
 - Sitemap.xml created
 - Build stats
@@ -38,7 +39,6 @@ html/css/js + markdown + gulp automation + hot-reloading to create lightweight s
 - [ ] Category support
 - [ ] Show HTML before and after sizes in build report
 - [ ] Use [purgecss](https://purgecss.com/plugins/gulp.html#installation)?
-- [ ] Font face
 - [ ] Theming (+ predefined palettes, scss variables and root css usage)
 
 ## Install

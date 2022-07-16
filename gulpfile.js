@@ -58,8 +58,11 @@ const htmlTasks = [
 // asset tasks
 const assetTasks = ['fonts', 'images', 'videos'];
 
+// js tasks
+const jsTasks = ['js', 'move-js-min'];
+
 // shared tasks
-const sharedTasks = ['clean', 'scss', 'js', ...htmlTasks, ...assetTasks];
+const sharedTasks = ['clean', 'scss', ...jsTasks, ...htmlTasks, ...assetTasks];
 
 // dev ONLY tasks
 const devTasks = ['serve'];
@@ -154,8 +157,9 @@ gulp.task('scss', () => {
  * javascript
 \**************************************************************************** */
 gulp.task('js', () => {
-  // grab all js
-  let sourceFile = gulp.src('./src/js/**/*.js');
+  // grab all js (exclude .min if present)
+  const jsSourcePattern = ['./src/js/**/*.js', '!./src/js/**/*.min.js'];
+  let sourceFile = gulp.src(jsSourcePattern);
 
   if (isProduction) {
     // minify js & rename
@@ -163,6 +167,13 @@ gulp.task('js', () => {
   }
 
   return sourceFile.pipe(gulp.dest(`./${directory}/js`));
+});
+
+/** ***************************************************************************\
+ * move any javascript that is already minified in /src/js/
+\**************************************************************************** */
+gulp.task('move-js-min', () => {
+  return gulp.src('./src/js/**/*.min.js').pipe(gulp.dest(`./${directory}/js`));
 });
 
 /** ***************************************************************************\
