@@ -1,0 +1,145 @@
+{# base-elements page #}
+{% extends "page.njk" %}
+
+{# setting page specific content #}
+{% block content %}
+  <p>All HTML elements below have default browser style, along with <a href="https://necolas.github.io/normalize.css/" target="_blank" rel="noopener">Normalize.css</a> only.</p>
+    
+  <h1>Heading 1</h1>
+  <h2>Heading 2</h2>
+  <h3>Heading 3</h3>
+  <h4>Heading 4</h4>
+  <h5>Heading 5</h5>
+  <h6>Heading 6</h6>
+  
+  <hr />
+  
+  <a href="#">Anchor link</a>
+  
+  <p>My first paragraph. <a href="https://www.youtube.com/watch?v=jDwfD5pjy88" target="_blank" rel="noopener">Everything is free now</a>, That's what they say, Everything I ever done, Gonna give it away...</p>
+  
+  <ol>
+    <li>Donnie Darko</li>
+    <li>The Shawshank Redemption</li>
+    <li>Good Will Hunting</li>
+  </ol>
+  
+  <ul>
+    <li>Aesop Rock</li>
+    <li>Daughter</li>
+    <li>Drive-By Truckers</li>
+  </ul>
+  
+  <p><b>bold text</b></p>
+  <p><s>Sold out!</s></p>
+  <p>You <em>have</em> to hurry up!</p>
+  <p>Do not forget to buy <mark>milk</mark> today.</p>
+  <p><cite>The Scream</cite> by Edward Munch. Painted in 1893.</p>
+  <p><dfn>HTML</dfn> is the standard markup language for creating web pages.</p>
+  <p><s>Sold out!</s></p>
+  <p>Almost every developer's favorite molecule is C<sub>8</sub>H<sub>10</sub>N<sub>4</sub>O<sub>2</sub>, also known as "caffeine".</p>
+  <p>feather ssg <sup>&trade;</sup></p>
+  
+  <p>The CSS <code>background-color</code> property defines the background color of an element.</p>
+  
+  <pre>
+Text in a pre element
+is displayed in a fixed-width
+font, and it preserves
+both spaces and
+line breaks
+</pre>
+  
+  <img src="/images/150-square.jpg" alt="placeholder image that is 150 pixel squared" />
+  
+  <br />
+  
+  <video width="400" height="225" controls>
+    <source src="/videos/waves-against-rock.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+  <div>
+    Video by <strong><a href="https://www.pexels.com/@michalmarek" target="_blank" rel="noopener">Michal Marek</a></strong> from <strong><a href="https://www.pexels.com/video/waves-rushing-and-splashing-to-the-shore-1409899/" target="_blank" rel="noopener">Pexels</a></strong>
+  </div>
+  
+  <br />
+  
+  <table>
+    <thead>
+      <tr>
+        <th>Month</th>
+        <th>Days</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>November</td>
+        <td>30</td>
+      </tr>
+      <tr>
+        <td>December</td>
+        <td>31</td>
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr>
+        <td>Total</td>
+        <td>61</td>
+      </tr>
+    </tfoot>
+  </table>
+  
+  <details>
+    <summary>Summary of content</summary>
+    <p>A paragraph about some specific content, this "see more" was created with &lt;details /&gt; & &lt;summary /&gt;</p>
+  </details>
+  
+  <label for="disk">Label for &lt;meter /&gt;:</label>
+  <br />
+  <meter id="disk" value="2" min="0" max="10">2 out of 10</meter>
+  <br />
+  
+  <label for="file">Label for &lt;progress /&gt;:</label>
+  <br />
+  <progress id="file" value="32" max="100"> 32% </progress>
+  <br />
+  
+  <select name="avengers" id="avengers">
+    <option value="ironMan">Iron Man</option>
+    <option value="hulk">Hulk</option>
+    <option value="captainAmerica">Captain America</option>
+    <option value="thor">Thor</option>
+    <option value="blackWidow">Black Widow</option>
+  </select>
+  <br />
+  
+  <input type="text" id="name" name="name">
+  <br />
+  
+  <input type="submit" value="Submit">
+  <br />
+  
+  <button type="button">Click Me (&lt;button/&gt;)</button>
+  <br />
+  
+  <svg height="130" width="500">
+    <defs>
+      <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" style="stop-color:rgb(255,255,0);stop-opacity:1" />
+        <stop offset="100%" style="stop-color:rgb(255,0,0);stop-opacity:1" />
+      </linearGradient>
+    </defs>
+    <ellipse cx="100" cy="70" rx="85" ry="55" fill="url(#grad1)" />
+    <text fill="#ffffff" font-size="45" font-family="Verdana" x="50" y="86">SVG</text>
+    Sorry, your browser does not support inline SVG.
+  </svg>
+  
+  <hr />
+  
+  <a href="/index.html">return home</a>
+{% endblock %}
+
+{# setting page specific js #}
+{% block pageSpecificJs %}
+  {% include "partials/include-jquery.njk" %}
+{% endblock %}
