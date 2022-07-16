@@ -7,18 +7,18 @@
 
 {# setting page specific content #}
 {% block content %}
-  <div class="container">
-    <h1>
-      {% include "icons/feather.njk" %}
-      welcome to feather ssg
-    </h1>
-    
-    <ul>
-      <li><a href="/features.html" role="button">Features</a></li>
-      <li><a href="/html-elements.html" role="button">HTML Elements</a></li>
-      <li><a href="/php/intro-to-lumen.html" role="button">Example of Sub-Directory Page</a></li>
-    </ul>
-  </div>
+  <h1>
+    {% include "icons/feather.njk" %}
+    welcome to feather ssg
+  </h1>
+  
+  <p>This page was created with <a href="https://mozilla.github.io/nunjucks/" target="_blank" rel="noopener">nunjucks templating</a>.</p>
+  
+  <ul>
+    <li><a href="/features.html" role="button">Features</a></li>
+    <li><a href="/html-elements.html" role="button">HTML Elements</a></li>
+    <li><a href="/php/intro-to-lumen.html" role="button">Example of Sub-Directory Page</a></li>
+  </ul>
 {% endblock %}
 
 {# setting page specific js #}

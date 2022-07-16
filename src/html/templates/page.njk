@@ -5,10 +5,12 @@
   <body{% if bodyClass|length %} class="{{ bodyClass }}"{% endif %}>
     
     {# page specific HTML will be added here #}
-    {% block content %}
-    {% endblock %}
-    
-    {{ content | safe }}
+    <main>
+      {% block content %}
+      {% endblock %}
+      
+      {{ content | safe }}
+    </main>
     
     [[PREV/NEXT]]
     
