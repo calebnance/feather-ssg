@@ -10,7 +10,7 @@ if (
 
 window
   .matchMedia('(prefers-color-scheme: dark)')
-  .addEventListener('change', e => {
+  .addEventListener('change', (e) => {
     const classFunc = e.matches ? 'add' : 'remove';
     document.body.classList[classFunc](darkModeClass);
   });

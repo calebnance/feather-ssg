@@ -272,11 +272,14 @@ gulp.task('nunjucks', () => {
     );
 
   // replace CSS/JS
-  const baseFile = isProduction ? 'base.min' : 'base';
+  const { cssBaseFileName, jsBaseFileName } = siteConfig;
+  const cssBase = isProduction ? `${cssBaseFileName}.min` : cssBaseFileName;
+  const jsBase = isProduction ? `${jsBaseFileName}.min` : jsBaseFileName;
+
   sourceFile = sourceFile.pipe(
     replaceHTML({
-      css: `<link type="text/css" rel="stylesheet" href="/css/${baseFile}.css">`,
-      js: `<script src="/js/${baseFile}.js"></script>`
+      css: `<link type="text/css" rel="stylesheet" href="/css/${cssBase}.css">`,
+      js: `<script src="/js/${jsBase}.js"></script>`
     })
   );
 
@@ -378,11 +381,14 @@ gulp.task('markdown', () => {
     );
 
   // replace CSS/JS
-  const baseFile = isProduction ? 'base.min' : 'base';
+  const { cssBaseFileName, jsBaseFileName } = siteConfig;
+  const cssBase = isProduction ? `${cssBaseFileName}.min` : cssBaseFileName;
+  const jsBase = isProduction ? `${jsBaseFileName}.min` : jsBaseFileName;
+
   sourceFile = sourceFile.pipe(
     replaceHTML({
-      css: `<link type="text/css" rel="stylesheet" href="/css/${baseFile}.css">`,
-      js: `<script src="/js/${baseFile}.js"></script>`
+      css: `<link type="text/css" rel="stylesheet" href="/css/${cssBase}.css">`,
+      js: `<script src="/js/${jsBase}.js"></script>`
     })
   );
 

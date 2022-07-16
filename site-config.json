@@ -1,3 +1,5 @@
 {
-  "baseUrl": "https://feather-ssg.dev"
+  "baseUrl": "https://feather-ssg.dev",
+  "cssBaseFileName": "global",
+  "jsBaseFileName": "script"
 }
