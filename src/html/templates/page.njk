@@ -4,15 +4,15 @@
 
   <body{% if bodyClass|length %} class="{{ bodyClass }}"{% endif %}>
     
+    {% include "partials/navigation.njk" %}
+    
     {# page specific HTML will be added here #}
-    <main>
+    <main class="container">
       {% block content %}
       {% endblock %}
       
-      {{ content | safe }}
+      [[PREV/NEXT]]
     </main>
-    
-    [[PREV/NEXT]]
     
     <!-- build:js -->
       <!-- EVERYTHING WITHIN HERE WILL BE REPLACED WITH SCRIPTS -->
