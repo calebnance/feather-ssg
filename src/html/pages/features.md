@@ -5,23 +5,19 @@ metaDescription: feather is back to the basics
 title: Features of feather ssg
 dateCreated: 2022-01-22 14:00:00 EDT
 dateUpdated: 2022-04-22 11:00:00 EDT
-category: html
+category: features
 tags: javascript code howto
 css: extra-style
 ---
 
 # Features of feather ssg
 
-This is a return to a simple HTML/CSS/JavaScript dev environment built with **Production** in mind.
+This project is a return to a simple HTML/CSS/JavaScript dev environment.
 
 - Hot reloading (with QR code for **parallel** physical mobile development)
 - HTML + **Nunjucks Templating** with Layouts
 - **Markdown** support
 - SCSS => CSS
-- HTML, CSS and JS minified for fast page loads
+- HTML, CSS, and JS minified for fast page loads
 - **Dark Mode** check with JavaScript (adds `.dark-mode` to body)
 - Data hydration from supporting **json** or **Front Matter**
-
----
-
-[return home](/index.html)

@@ -3,7 +3,7 @@ layout: page
 metaTitle: HTML Snippets
 metaDescription: feather is back to the basics
 title: HTML Snippets
-dateCreated: 2022-07-15 22:19:00 EDT
+dateCreated: 2022-07-13 20:02:20 EDT
 category: html
 tags: html code
 css: prism
