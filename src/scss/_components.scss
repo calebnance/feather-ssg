@@ -42,7 +42,7 @@
     color: var(--color-text);
     margin-right: 16px;
     text-decoration: none;
-    transition: margin-right 400ms ease-in-out;
+    // transition: margin-right 400ms ease-in-out;
 
     @media screen and (min-width: 600px) {
       margin-right: 32px;
@@ -58,7 +58,7 @@
   border-radius: 8px;
   display: flex;
   justify-content: space-between;
-  margin-top: 32px;
+  margin: 32px 0;
   padding: 8px;
 
   a {

@@ -6,7 +6,7 @@ title: PHP
 dateCreated: 2022-07-11 20:22:00 EDT
 category: php
 tags: php code
-css: prism
+prism: true
 ---
 
 # PHP

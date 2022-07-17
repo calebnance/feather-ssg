@@ -6,7 +6,6 @@ title: HTML
 dateCreated: 2022-07-10 20:19:00 EDT
 category: html
 tags: html code
-css: prism
 ---
 
 # HTML

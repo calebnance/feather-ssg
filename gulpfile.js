@@ -179,8 +179,8 @@ gulp.task('move-js-min', () => {
 /** ***************************************************************************\
  * create data for future use / module creation
 \**************************************************************************** */
-const moduleCreation = (props) => {
-  const { category, dateCreated, pathHTML, subPath, title } = props;
+const moduleCreation = ({ category, combinedData, pathHTML, subPath }) => {
+  const { dateCreated, title } = combinedData;
 
   const options = {
     year: 'numeric',
@@ -251,18 +251,24 @@ gulp.task('nunjucks', () => {
         };
 
         const { category } = pageData;
-        const { dateCreated, title } = combinedData;
 
         // use data for future module creation
-        moduleCreation({ category, dateCreated, pathHTML, subPath, title });
+        moduleCreation({ category, combinedData, pathHTML, subPath });
+
+        const subPathKey = subPath.substring(1).replace(/\//g, '-');
 
         // extra css?
         if (combinedData?.css) {
-          // console.log('Extra CSS exists');
-          const subPathKey = subPath.substring(1).replace(/\//g, '-');
           this.extraCss[subPathKey] = {
             path: subPath,
             css: combinedData.css
+          };
+        }
+
+        // include Prism CSS/JS?
+        if (combinedData.prism) {
+          this.usePrism[subPathKey] = {
+            path: subPath
           };
         }
 
@@ -360,18 +366,24 @@ gulp.task('markdown', () => {
         // console.log(combinedData);
 
         const { category } = pageData;
-        const { dateCreated, title } = combinedData;
 
         // use data for future module creation
-        moduleCreation({ category, dateCreated, pathHTML, subPath, title });
+        moduleCreation({ category, combinedData, pathHTML, subPath });
+
+        const subPathKey = subPath.substring(1).replace(/\//g, '-');
 
         // extra css?
         if (combinedData?.css) {
-          // console.log('Extra CSS exists');
-          const subPathKey = subPath.substring(1).replace(/\//g, '-');
           this.extraCss[subPathKey] = {
             path: subPath,
             css: combinedData.css
+          };
+        }
+
+        // include Prism CSS/JS?
+        if (combinedData.prism) {
+          this.usePrism[subPathKey] = {
+            path: subPath
           };
         }
 
@@ -421,6 +433,8 @@ gulp.task('markdown', () => {
 gulp.task('html-replace', () => {
   const extraClassKeys = Object.keys(this.extraCss);
   const extraClassObj = this.extraCss;
+  const prismKeys = Object.keys(this.usePrism);
+  const prismObj = this.usePrism;
   const pagesArray = this.pages;
 
   const dangleBase = '_base';
@@ -455,6 +469,25 @@ gulp.task('html-replace', () => {
           const addMin = isProduction ? '.min' : '';
 
           replaceWith = `<link type="text/css" rel="stylesheet" href="/css/${css}${addMin}.css">`;
+        }
+
+        return replaceWith;
+      })
+    )
+    .pipe(
+      gulpReplace('[[USE PRISM]]', function handleReplace() {
+        const filePathArray = this.file.path
+          .replace(this.file[dangleBase], '')
+          .split('.');
+        const subPath = filePathArray[0];
+        const filePath = subPath.replace('/', '').replace(/\//g, '-');
+
+        let replaceWith = '';
+
+        if (prismKeys.includes(filePath)) {
+          const addMin = isProduction ? '.min' : '';
+
+          replaceWith = `<link type="text/css" rel="stylesheet" href="/css/prism${addMin}.css"><script src="/js/prism-default${addMin}.js"></script>`;
         }
 
         return replaceWith;
@@ -519,6 +552,7 @@ gulp.task('dataStart', (done) => {
   this.pages = [];
   this.pagesChronological = {};
   this.extraCss = {};
+  this.usePrism = {};
 
   done();
 });

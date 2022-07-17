@@ -6,7 +6,7 @@ title: HTML Snippets
 dateCreated: 2022-07-13 20:02:20 EDT
 category: html
 tags: html code
-css: prism
+prism: true
 ---
 
 # HTML Snippets
