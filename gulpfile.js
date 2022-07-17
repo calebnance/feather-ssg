@@ -601,19 +601,19 @@ gulp.task('serve', () => {
 
   // watches for any file change and re-compile
   gulp.watch(
-    './src/html/**/*.(js|json|njk|md|markdown)',
-    { ignoreInitial: true },
+    'src/html/**/*.(js|json|njk|md|markdown)',
+    // { ignoreInitial: true },
     gulp.series(htmlTasks)
   );
   gulp.watch(
-    './src/scss/**/*.scss',
-    { ignoreInitial: true },
+    'src/scss/**/*.scss',
+    // { ignoreInitial: true },
     gulp.series('scss')
   );
-  gulp.watch('./src/js/**/*.js', { ignoreInitial: true }, gulp.series('js'));
+  gulp.watch('src/js/**/*.js', { ignoreInitial: true }, gulp.series('js'));
 
   // watch for output change and hot-reload to show latest
-  gulp.watch(`./${directory}/**/*.(html|css|js)`).on('change', reload);
+  gulp.watch(`${directory}/**/*.(html|css|js)`).on('change', reload);
 });
 
 /** ***************************************************************************\
