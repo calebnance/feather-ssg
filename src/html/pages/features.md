@@ -8,6 +8,7 @@ dateUpdated: 2022-04-22 11:00:00 EDT
 category: features
 tags: code howto
 css: extra-style
+prism: true
 ---
 
 # Features of feather ssg
