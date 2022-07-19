@@ -179,22 +179,29 @@ gulp.task('move-js-min', () => {
 /** ***************************************************************************\
  * create data for future use / module creation
 \**************************************************************************** */
-const moduleCreation = ({ category, combinedData, pathHTML, subPath }) => {
-  const { dateCreated, title } = combinedData;
+const moduleCreation = ({ category, combinedData, fileInfo }) => {
+  const { fullPath, subPath } = fileInfo;
+  const { dateCreated, dateUpdated, title } = combinedData;
 
   const options = {
     year: 'numeric',
-    month: 'long',
+    month: 'short',
     day: 'numeric',
     hour: '2-digit',
     hour12: true,
     minute: '2-digit'
   };
 
-  const date = new Date(dateCreated);
+  const created = new Date(dateCreated);
+  const dateCreatedFormat = created.toLocaleString('en-US', options);
+  const updated = new Date(dateUpdated);
+  const dateUpdatedFormat = dateUpdated
+    ? updated.toLocaleString('en-US', options)
+    : null;
+
   const dateObj = {
-    dateCreated: date,
-    dateCreatedFormat: date.toLocaleString('en-US', options),
+    dateCreated: created,
+    dateCreatedFormat,
     subPath,
     title
   };
@@ -206,12 +213,42 @@ const moduleCreation = ({ category, combinedData, pathHTML, subPath }) => {
     this.pagesChronological[category] = [dateObj];
   }
 
+  const pathHTML = `${subPath}.html`;
+
   // add category
   if (category in this.categories) {
     this.categories[category].push(pathHTML);
   } else {
     this.categories[category] = [pathHTML];
   }
+
+  const subPathKey = subPath.substring(1).replace(/\//g, '-');
+
+  // add right menu?
+  if (combinedData.isPost) {
+    this.showRightColumn.push(subPath);
+  }
+
+  // extra css?
+  if (combinedData?.css) {
+    this.extraCss[subPathKey] = {
+      path: subPath,
+      css: combinedData.css
+    };
+  }
+
+  // include Prism CSS/JS?
+  if (combinedData.prism) {
+    this.usePrism.push(subPathKey);
+  }
+
+  // add to pages
+  this.pages[subPath] = {
+    category,
+    fullPath,
+    ...(dateCreatedFormat && { dateCreated: dateCreatedFormat }),
+    ...(dateUpdatedFormat && { dateUpdated: dateUpdatedFormat })
+  };
 };
 
 /** ***************************************************************************\
@@ -228,7 +265,6 @@ gulp.task('nunjucks', () => {
         const fileInfo = util.parseFilePath(file.path);
 
         const { fullPath, subPath } = fileInfo;
-        const pathHTML = `${subPath}.html`;
 
         // set path to json file, specific to the HTML page we are compiling!
         const pathToFile = `./src/html/data${subPath}.json`;
@@ -253,30 +289,7 @@ gulp.task('nunjucks', () => {
         const { category } = pageData;
 
         // use data for future module creation
-        moduleCreation({ category, combinedData, pathHTML, subPath });
-
-        const subPathKey = subPath.substring(1).replace(/\//g, '-');
-
-        // extra css?
-        if (combinedData?.css) {
-          this.extraCss[subPathKey] = {
-            path: subPath,
-            css: combinedData.css
-          };
-        }
-
-        // include Prism CSS/JS?
-        if (combinedData.prism) {
-          this.usePrism[subPathKey] = {
-            path: subPath
-          };
-        }
-
-        // add to pages
-        this.pages[subPath] = {
-          category,
-          fullPath
-        };
+        moduleCreation({ category, combinedData, fileInfo });
 
         return combinedData;
       }).on('error', pingError)
@@ -353,8 +366,7 @@ gulp.task('markdown', () => {
         const pinkMatter = matter(fileContent);
         const pageData = pinkMatter.data;
 
-        const { fullPath, subPath } = fileInfo;
-        const pathHTML = `${subPath}.html`;
+        const { fullPath } = fileInfo;
 
         const combinedData = {
           ...defaultData,
@@ -368,30 +380,7 @@ gulp.task('markdown', () => {
         const { category } = pageData;
 
         // use data for future module creation
-        moduleCreation({ category, combinedData, pathHTML, subPath });
-
-        const subPathKey = subPath.substring(1).replace(/\//g, '-');
-
-        // extra css?
-        if (combinedData?.css) {
-          this.extraCss[subPathKey] = {
-            path: subPath,
-            css: combinedData.css
-          };
-        }
-
-        // include Prism CSS/JS?
-        if (combinedData.prism) {
-          this.usePrism[subPathKey] = {
-            path: subPath
-          };
-        }
-
-        // add to pages
-        this.pages[subPath] = {
-          category,
-          fullPath
-        };
+        moduleCreation({ category, combinedData, fileInfo });
 
         return combinedData;
       }).on('error', pingError)
@@ -431,11 +420,17 @@ gulp.task('markdown', () => {
  * HTML Replace
 \**************************************************************************** */
 gulp.task('html-replace', () => {
+  // include extra css to the page?
   const extraClassKeys = Object.keys(this.extraCss);
   const extraClassObj = this.extraCss;
-  const prismKeys = Object.keys(this.usePrism);
-  const prismObj = this.usePrism;
+
   const pagesArray = this.pages;
+
+  // show right column
+  const showRightColumnArray = this.showRightColumn;
+
+  // include prism.js?
+  const usePrismArray = this.usePrism;
 
   const dangleBase = '_base';
 
@@ -484,7 +479,7 @@ gulp.task('html-replace', () => {
 
         let replaceWith = '';
 
-        if (prismKeys.includes(filePath)) {
+        if (usePrismArray.includes(filePath)) {
           const addMin = isProduction ? '.min' : '';
 
           replaceWith = `<link type="text/css" rel="stylesheet" href="/css/prism${addMin}.css"><script src="/js/prism-default${addMin}.js"></script>`;
@@ -544,15 +539,57 @@ gulp.task('html-replace', () => {
         return replaceWith;
       })
     )
+    .pipe(
+      gulpReplace('[[RIGHT COLUMN]]', function handleReplace() {
+        const filePathArray = this.file.path
+          .replace(this.file[dangleBase], '')
+          .split('.');
+        const subPath = filePathArray[0];
+
+        let replaceWith = '';
+
+        if (showRightColumnArray.includes(subPath)) {
+          const { dateCreated, dateUpdated = null } = pagesArray[subPath];
+          const showCreated = dateCreated
+            ? `<div class="date-created"><strong>Created:</strong><br />${dateCreated}</div>`
+            : '';
+          const showUpdated = dateUpdated
+            ? `<div class="date-updated"><strong>Updated:</strong><br />${dateUpdated}</div>`
+            : '';
+
+          replaceWith = `<aside class="right-column">${showCreated}${showUpdated}</aside>`;
+        }
+
+        return replaceWith;
+      })
+    )
+    .pipe(
+      gulpReplace('<div class="container">', function handleReplace() {
+        const filePathArray = this.file.path
+          .replace(this.file[dangleBase], '')
+          .split('.');
+        const subPath = filePathArray[0];
+
+        const replaceWith = showRightColumnArray.includes(subPath)
+          ? '<div class="container has-right-column">'
+          : '<div class="container">';
+
+        return replaceWith;
+      })
+    )
     .pipe(gulp.dest(`./${directory}`));
 });
 
 gulp.task('dataStart', (done) => {
+  // global buld stats
   this.categories = [];
   this.pages = [];
   this.pagesChronological = {};
+
+  // page specific global
   this.extraCss = {};
-  this.usePrism = {};
+  this.usePrism = [];
+  this.showRightColumn = [];
 
   done();
 });

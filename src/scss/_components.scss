@@ -4,6 +4,33 @@
   margin: 0 auto;
   max-width: 1080px;
   padding: 0 16px;
+
+  @media screen and (min-width: 998px) {
+    &.has-right-column {
+      display: flex;
+    }
+  }
+}
+
+// post layout
+// /////////////////////////////////////////////////////////////////////////////
+.has-right-column main {
+  width: 100%;
+
+  @media screen and (min-width: 998px) {
+    border-right: 1px solid var(--color-border);
+    height: 100vh;
+    padding-right: 16px;
+  }
+}
+
+.right-column {
+  margin-top: 32px;
+  width: 246px;
+
+  @media screen and (min-width: 998px) {
+    padding-left: 16px;
+  }
 }
 
 // nav bar

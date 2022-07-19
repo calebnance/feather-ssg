@@ -6,5 +6,6 @@
   "metaDescription": "",
   "metaRobots": "index, follow",
   "title": "",
-  "prism": false
+  "prism": false,
+  "isPost": true
 }

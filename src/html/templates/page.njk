@@ -7,12 +7,16 @@
     {% include "partials/navigation.njk" %}
     
     {# page specific HTML will be added here #}
-    <main class="container">
-      {% block content %}
-      {% endblock %}
+    <div class="container">
+      <main>
+        {% block content %}
+        {% endblock %}
+        
+        [[PREV/NEXT]]
+      </main>
       
-      [[PREV/NEXT]]
-    </main>
+      [[RIGHT COLUMN]]
+    </div>
     
     <!-- build:js -->
       <!-- EVERYTHING WITHIN HERE WILL BE REPLACED WITH SCRIPTS -->
