@@ -1,7 +1,7 @@
 {
   "htmlLanguage": "en",
   "htmlClass": "",
-  "bodyClass": "",
+  "bodyClass": "has-right-column",
   "metaTitle": "",
   "metaDescription": "",
   "metaRobots": "index, follow",

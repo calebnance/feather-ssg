@@ -6,7 +6,7 @@
   padding: 0 16px;
 
   @media screen and (min-width: 998px) {
-    &.has-right-column {
+    .has-right-column & {
       display: flex;
     }
   }
@@ -25,11 +25,20 @@
 }
 
 .right-column {
-  margin-top: 32px;
-  width: 246px;
+  margin: 32px 0;
 
   @media screen and (min-width: 998px) {
+    margin-bottom: 0;
     padding-left: 16px;
+    width: 246px;
+  }
+
+  & div {
+    margin-bottom: 16px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
   }
 }
 

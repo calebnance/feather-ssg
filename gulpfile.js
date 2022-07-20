@@ -563,20 +563,6 @@ gulp.task('html-replace', () => {
         return replaceWith;
       })
     )
-    .pipe(
-      gulpReplace('<div class="container">', function handleReplace() {
-        const filePathArray = this.file.path
-          .replace(this.file[dangleBase], '')
-          .split('.');
-        const subPath = filePathArray[0];
-
-        const replaceWith = showRightColumnArray.includes(subPath)
-          ? '<div class="container has-right-column">'
-          : '<div class="container">';
-
-        return replaceWith;
-      })
-    )
     .pipe(gulp.dest(`./${directory}`));
 });
 
