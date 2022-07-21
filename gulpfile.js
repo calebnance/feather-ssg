@@ -520,8 +520,8 @@ gulp.task('html-replace', () => {
         let replaceWith = '';
 
         if (prevPost !== null || nextPost !== null) {
-          let prevDiv = '';
-          let nextDiv = '';
+          let prevDiv = '<div></div>';
+          let nextDiv = '<div></div>';
 
           if (prevPost !== null) {
             prevDiv = `<a class="prev-post" href="${prevPost.subPath}.html"><div class="pn-text">Prev</div><div class="prev-title">${prevPost.title}</div></a>`;
@@ -531,9 +531,7 @@ gulp.task('html-replace', () => {
             nextDiv = `<a class="next-post" href="${nextPost.subPath}.html"><div class="pn-text">Next</div><div class="next-title">${nextPost.title}</div></a>`;
           }
 
-          const onlyNext = prevDiv === '' && nextDiv !== '' ? ' only-next' : '';
-
-          replaceWith = `<div class="container-prev-next${onlyNext}">${prevDiv}${nextDiv}</div>`;
+          replaceWith = `<div class="container-prev-next">${prevDiv}${nextDiv}</div>`;
         }
 
         return replaceWith;
