@@ -13,14 +13,15 @@ prism: true
 
 # Features of feather ssg
 
-This project is a return to a simple HTML/CSS/JavaScript dev environment.
-
+- HTML/**Nunjucks Templating** + **Markdown**/**Front Matter** support
 - Hot reloading (with QR code for **parallel** physical mobile development)
-- HTML + **Nunjucks Templating** with Layouts
-- **Markdown** + **Front Matter** support
+- **Production build:** HTML, CSS, and JS minified
 - SCSS => CSS
-- HTML, CSS, and JS minified for fast page loads
-- **Dark Mode** check with JavaScript (adds `.dark-mode` to body)
+- **Previous / Next** posts within Category sorted by created date
+- Code snippet formatting with <a href="https://prismjs.com" rel="noopener nofollow" target="_blank">Prism</a>
+- **Dark Mode**
+  - check with JavaScript (adds `.dark-mode` to body)
+  - or use CSS variables with `:root`
 - Data hydration from supporting **json** or **Front Matter**
 
 ---
