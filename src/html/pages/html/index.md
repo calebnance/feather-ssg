@@ -38,4 +38,4 @@ This is just a **sudo example** of how Nunjucks layouts are setup, this is **not
 </html>
 ```
 
-To edit view: `/src/html/pages/html/index.md`
+To edit this post, check out: `/src/html/pages/html/index.md`

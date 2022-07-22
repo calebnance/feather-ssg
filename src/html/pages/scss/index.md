@@ -30,4 +30,4 @@ With SCSS/CSS hover over the values to see a preview.
 }
 ```
 
-To edit view: `/src/html/pages/scss/index.md`
+To edit this post, check out: `/src/html/pages/scss/index.md`

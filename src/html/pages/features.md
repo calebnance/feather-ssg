@@ -42,4 +42,4 @@ css: extra-style
 
 It also has a custom css file included (css: extra-style)
 
-To edit view: `/src/html/pages/features.md`
+To edit this post, check out: `/src/html/pages/features.md`

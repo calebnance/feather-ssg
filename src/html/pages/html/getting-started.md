@@ -17,7 +17,7 @@ So for example: `/src/html/pages/features.md` => `/features.html`
 
 ---
 
-The easiest way to create a new post is with markdown.
+The easiest way to create a new post is with markdown, the front matter looks like this:
 
 ```yaml
 # layout support
@@ -37,7 +37,9 @@ dateUpdated: 2022-07-11 20:49:34 EDT
 # posts are sorted by created date within each category
 category: html
 tags: code howto
+
+# include prism for code snippets
 prism: true
 ```
 
-To edit view: `/src/html/pages/html/getting-started.md`
+To edit this post, check out: `/src/html/pages/html/getting-started.md`
