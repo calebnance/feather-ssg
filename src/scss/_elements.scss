@@ -10,6 +10,10 @@ h1 {
   }
 }
 
+ul {
+  padding-left: 16px;
+}
+
 svg {
   fill: var(--fill-svg);
 }
@@ -18,4 +22,10 @@ hr {
   border-color: var(--color-border);
   border-top: 0;
   border-width: 1px;
+}
+
+code {
+  background-color: var(--color-bg-secondary);
+  border-radius: 2px;
+  padding: 0px 4px;
 }
