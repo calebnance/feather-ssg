@@ -224,8 +224,8 @@ const moduleCreation = ({ category, combinedData, fileInfo }) => {
 
   const subPathKey = subPath.substring(1).replace(/\//g, '-');
 
-  // add right menu?
-  if (combinedData.isPost) {
+  // add right column?
+  if (combinedData.showRightColumn) {
     this.showRightColumn.push(subPath);
   }
 

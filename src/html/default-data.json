@@ -7,5 +7,5 @@
   "metaRobots": "index, follow",
   "title": "",
   "prism": false,
-  "isPost": true
+  "showRightColumn": true
 }

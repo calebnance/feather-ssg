@@ -5,5 +5,5 @@
   "title": "welcome to feather ssg",
   "dateCreated": "2010-01-22 11:00:00 EDT",
   "category": "homepage",
-  "isPost": false
+  "showRightColumn": false
 }
