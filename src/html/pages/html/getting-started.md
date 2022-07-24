@@ -1,7 +1,7 @@
 ---
 layout: page
 metaTitle: Getting started with feather ssg
-metaDescription: feather is back to the basics
+metaDescription: feather ssg is back to the basics
 title: Getting started with feather ssg
 dateCreated: 2022-07-09 18:19:00 EDT
 category: html
@@ -11,13 +11,15 @@ prism: true
 
 # Getting started with feather ssg
 
+The easiest way to create a new post is with a markdown file.
+
 All pages/posts are created within `/src/html/pages/`.
 
 So for example: `/src/html/pages/features.md` => `/features.html`
 
 ---
 
-The easiest way to create a new post is with markdown, the front matter looks like this:
+The front matter looks like this:
 
 ```yaml
 # layout support
@@ -25,7 +27,7 @@ layout: page
 
 # meta
 metaTitle: Getting started with feather ssg
-metaDescription: feather is back to the basics
+metaDescription: feather ssg is back to the basics
 
 # page title (used for prev/next)
 title: Getting started with feather ssg
