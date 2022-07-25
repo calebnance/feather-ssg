@@ -13,9 +13,9 @@ prism: true
 
 The easiest way to create a new post is with a markdown file.
 
-All pages/posts are created within `/src/html/pages/`
+All pages/posts are created within `./src/html/pages/`
 
-So for example: `/src/html/pages/features.md` => `/features.html`
+So for example: `./src/html/pages/features.md` => `/features.html`
 
 ---
 
@@ -47,14 +47,3 @@ This category is used for grouping and paired with `dateCreated`, it displays th
 # posts are sorted by created date within each category
 category: html
 ```
-
-## Code Snippet Styling
-
-If you have code snippets in your post, turn this flag on to have prism styling applied.
-
-```yaml
-# include prism for code snippets
-prism: true
-```
-
-To edit this post, check out: `/src/html/pages/html/getting-started.md`
