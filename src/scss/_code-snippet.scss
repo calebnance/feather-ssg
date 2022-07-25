@@ -11,8 +11,11 @@ pre {
 code {
   background-color: var(--color-bg-code-snippet);
   color: #{$white};
-  border-radius: 2px;
-  padding: 0px 4px;
+
+  &:not([class^='language-']) {
+    border-radius: 4px;
+    padding: 0px 8px;
+  }
 }
 
 code[class*='language-'],

@@ -13,7 +13,7 @@ prism: true
 
 # Features of feather ssg
 
-- HTML/**Nunjucks Templating** + **Markdown**/**Front Matter** support
+- HTML / **Nunjucks Templating** + **Markdown** / **Front Matter** support
 - Hot reloading (with QR code for **parallel** physical mobile development)
 - **Production build:** HTML, CSS, and JS minified
 - SCSS => CSS

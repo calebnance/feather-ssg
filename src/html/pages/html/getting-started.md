@@ -13,13 +13,15 @@ prism: true
 
 The easiest way to create a new post is with a markdown file.
 
-All pages/posts are created within `/src/html/pages/`.
+All pages/posts are created within `/src/html/pages/`
 
 So for example: `/src/html/pages/features.md` => `/features.html`
 
 ---
 
-The front matter looks like this:
+## Base Front Matter
+
+This is what a base start of a post file would look like:
 
 ```yaml
 # layout support
@@ -35,11 +37,22 @@ title: Getting started with feather ssg
 # created (required) and updated date
 dateCreated: 2022-07-09 18:19:15 EDT
 dateUpdated: 2022-07-11 20:49:34 EDT
+```
 
+## Category Grouping
+
+This category is used for grouping and paired with `dateCreated`, it displays the Previous / Next module at the bottom of a post.
+
+```yaml
 # posts are sorted by created date within each category
 category: html
-tags: code howto
+```
 
+## Code Snippet Styling
+
+If you have code snippets in your post, turn this flag on to have prism styling applied.
+
+```yaml
 # include prism for code snippets
 prism: true
 ```
