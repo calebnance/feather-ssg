@@ -128,8 +128,10 @@
 
   .pn-text {
     color: var(--color-text);
+    font-size: 13px;
+    font-weight: bold;
     display: inline-block;
-    margin-bottom: 6px;
+    margin-bottom: 2px;
 
     &:after {
       background-color: var(--color-border-opacity-50);
