@@ -65,7 +65,7 @@ const jsTasks = ['js', 'move-js-min'];
 const sharedTasks = ['clean', 'scss', ...jsTasks, ...htmlTasks, ...assetTasks];
 
 // dev ONLY tasks
-const devTasks = ['serve'];
+const devTasks = ['watch', 'serve'];
 
 // production ONLY tasks
 const prodTasks = ['notify-completed'];
@@ -653,7 +653,9 @@ gulp.task('serve', () => {
     },
     plugins: ['bs-console-qrcode']
   });
+});
 
+gulp.task('watch', (done) => {
   // watches for any file change and re-compile
   gulp.watch(
     'src/html/**/*.(js|json|njk|md|markdown)',
@@ -665,10 +667,16 @@ gulp.task('serve', () => {
     // { ignoreInitial: true },
     gulp.series('scss')
   );
-  gulp.watch('src/js/**/*.js', { ignoreInitial: true }, gulp.series('js'));
+  gulp.watch(
+    'src/js/**/*.js',
+    // { ignoreInitial: true },
+    gulp.series('js')
+  );
 
   // watch for output change and hot-reload to show latest
   gulp.watch(`${directory}/**/*.(html|css|js)`).on('change', reload);
+
+  done();
 });
 
 /** ***************************************************************************\
