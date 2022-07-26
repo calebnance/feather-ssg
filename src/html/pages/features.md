@@ -3,11 +3,10 @@ layout: page
 metaTitle: Features of feather ssg
 metaDescription: feather is back to the basics
 title: Features of feather ssg
-dateCreated: 2022-01-22 14:00:00 EDT
-dateUpdated: 2022-04-22 11:00:00 EDT
+dateCreated: 2022-02-22 14:00:00 EDT
+dateUpdated: 2022-07-25 21:35:51 EDT
 category: features
 tags: code howto
-css: extra-style
 prism: true
 ---
 

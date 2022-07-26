@@ -4,6 +4,7 @@ metaTitle: Getting started with feather ssg
 metaDescription: feather ssg is back to the basics
 title: Getting started with feather ssg
 dateCreated: 2022-07-09 18:19:00 EDT
+dateUpdated: 2022-07-25 21:29:23 EDT
 category: html
 tags: code howto
 prism: true
@@ -47,3 +48,5 @@ This category is used for grouping and paired with `dateCreated`, it displays th
 # posts are sorted by created date within each category
 category: html
 ```
+
+To edit this post, check out: `/src/html/pages/html/getting-started.md`

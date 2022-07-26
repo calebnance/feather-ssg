@@ -1,0 +1,38 @@
+{# html/elements page #}
+{% extends "page.njk" %}
+
+{# setting page specific content #}
+{% block content %}
+  <h1>Nunjucks Posts</h1>
+  
+  <p>If Markdown isn't cutting it when trying to create a page, you can do Nunjucks posts!</p>
+    
+  <p>Everything works the same, you can "include" HTML snippets here within the <code>&lt;main /&gt;</code>
+    
+  <p>This page is also an example of how to include external javascript, in this case, jQuery.</p>
+    
+  <hr />
+  
+  <p>Below is an example of including an image and video on the page.</p>
+  
+  <div>
+    <img src="/images/150-square.jpg" alt="placeholder image that is 150 pixel squared" />
+  </div>
+
+  <video width="400" height="225" controls>
+    <source src="/videos/waves-against-rock.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+  
+  <div>
+    Video by <strong><a href="https://www.pexels.com/@michalmarek" target="_blank" rel="noopener">Michal Marek</a></strong> from <strong><a href="https://www.pexels.com/video/waves-rushing-and-splashing-to-the-shore-1409899/" target="_blank" rel="noopener">Pexels</a></strong>
+  </div>
+  
+  <p>To edit this post, check out: <code>/src/html/pages/html/templating.md</code></p>
+  
+{% endblock %}
+
+{# setting page specific js #}
+{% block pageSpecificJs %}
+  {% include "partials/include-jquery.njk" %}
+{% endblock %}
